@@ -1,0 +1,924 @@
+<div class="bg-light-warning rounded-circle p-3 me-3">
+    <i class="fas fa-shopping-cart fa-2x text-warning"></i>
+  </div>
+  <div>
+    <h6 class="text-muted mb-1">Pending Orders</h6>
+    <h4 class="fw-bold mb-0" id="pending-orders-count">0</h4>
+  </div>
+</div>
+<p class="text-muted small">Orders waiting to be processed</p>
+</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="card dashboard-card h-100">
+<div class="card-body">
+<div class="d-flex align-items-center mb-3">
+  <div class="bg-light-info rounded-circle p-3 me-3">
+    <i class="fas fa-dollar-sign fa-2x text-info"></i>
+  </div>
+  <div>
+    <h6 class="text-muted mb-1">Total Revenue</h6>
+    <h4 class="fw-bold mb-0" id="total-revenue">$0.00</h4>
+  </div>
+</div>
+<p class="text-muted small">Revenue from all completed orders</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-4" id="dashboardTab" role="tablist">
+<li class="nav-item" role="presentation">
+<button class="nav-link active" id="crops-tab" data-bs-toggle="tab" data-bs-target="#crops" type="button" role="tab" aria-controls="crops" aria-selected="true">
+<i class="fas fa-leaf me-2"></i>My Crops
+</button>
+</li>
+<li class="nav-item" role="presentation">
+<button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="false">
+<i class="fas fa-shopping-cart me-2"></i>Orders
+</button>
+</li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="dashboardTabContent">
+<!-- My Crops Tab -->
+<div class="tab-pane fade show active" id="crops" role="tabpanel" aria-labelledby="crops-tab">
+<!-- Search and Filter -->
+<div class="row mb-4">
+<div class="col-md-8">
+<div class="input-group">
+  <input type="text" class="form-control" placeholder="Search crops..." id="search-crops">
+  <button class="btn btn-outline-secondary" type="button" id="search-button">
+    <i class="fas fa-search"></i>
+  </button>
+</div>
+</div>
+<div class="col-md-4">
+<select class="form-select" id="sort-crops">
+  <option value="newest">Newest First</option>
+  <option value="oldest">Oldest First</option>
+  <option value="price-high">Price (High to Low)</option>
+  <option value="price-low">Price (Low to High)</option>
+</select>
+</div>
+</div>
+
+<!-- Crops List -->
+<div class="row" id="my-crops-list">
+<!-- Crops will be loaded here dynamically -->
+<div class="col-12 text-center py-5">
+<div class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Orders Tab -->
+<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+<!-- Filter Orders -->
+<div class="mb-4">
+<select class="form-select" id="filter-orders">
+<option value="all">All Orders</option>
+<option value="pending">Pending</option>
+<option value="confirmed">Confirmed</option>
+<option value="shipped">Shipped</option>
+<option value="delivered">Delivered</option>
+<option value="cancelled">Cancelled</option>
+</select>
+</div>
+
+<!-- Orders Table -->
+<div class="table-responsive">
+<table class="table table-hover">
+<thead class="table-light">
+  <tr>
+    <th>Order ID</th>
+    <th>Customer</th>
+    <th>Crop</th>
+    <th>Quantity</th>
+    <th>Total</th>
+    <th>Status</th>
+    <th>Date</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+<tbody id="orders-table-body">
+  <!-- Orders will be loaded here dynamically -->
+  <tr>
+    <td colspan="8" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Add Crop Modal -->
+<div class="modal fade" id="addCropModal" tabindex="-1" aria-labelledby="addCropModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="addCropModalLabel"><i class="fas fa-plus me-2"></i>Add New Crop</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<div class="alert alert-danger d-none" id="add-crop-error"></div>
+<form id="add-crop-form">
+<div class="row mb-3">
+<div class="col-md-6">
+  <label for="crop-name" class="form-label">Crop Name</label>
+  <input type="text" class="form-control" id="crop-name" name="name" required>
+</div>
+<div class="col-md-6">
+  <label for="crop-price" class="form-label">Price per Unit</label>
+  <div class="input-group">
+    <span class="input-group-text">$</span>
+    <input type="number" step="0.01" min="0.01" class="form-control" id="crop-price" name="price" required>
+    <select class="form-select" id="crop-unit" name="unit" style="max-width: 80px;">
+      <option value="kg">kg</option>
+      <option value="g">g</option>
+      <option value="lb">lb</option>
+      <option value="ton">ton</option>
+    </select>
+  </div>
+</div>
+</div>
+
+<div class="row mb-3">
+<div class="col-md-6">
+  <label for="crop-quantity" class="form-label">Available Quantity</label>
+  <input type="number" min="1" class="form-control" id="crop-quantity" name="quantity" required>
+</div>
+<div class="col-md-6">
+  <label for="crop-location" class="form-label">Harvest Location</label>
+  <input type="text" class="form-control" id="crop-location" name="location" required>
+</div>
+</div>
+
+<div class="mb-3">
+<label for="crop-description" class="form-label">Description</label>
+<textarea class="form-control" id="crop-description" name="description" rows="3" required></textarea>
+<small class="text-muted">Provide details about your crop (growing methods, freshness, etc.)</small>
+</div>
+
+<div class="mb-3">
+<label for="crop-image" class="form-label">Crop Image</label>
+<input type="file" class="form-control" id="crop-image" name="cropImage">
+<small class="text-muted">Recommended size: 800x600 pixels</small>
+</div>
+
+<div class="mb-3">
+<label for="harvest-date" class="form-label">Harvest Date</label>
+<input type="date" class="form-control" id="harvest-date" name="harvestDate">
+</div>
+</form>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button type="button" class="btn btn-primary" id="save-crop-btn">Save Crop</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Edit Crop Modal -->
+<div class="modal fade" id="editCropModal" tabindex="-1" aria-labelledby="editCropModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="editCropModalLabel"><i class="fas fa-edit me-2"></i>Edit Crop</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<div class="alert alert-danger d-none" id="edit-crop-error"></div>
+<form id="edit-crop-form">
+<input type="hidden" id="edit-crop-id" name="cropId">
+<div class="row mb-3">
+<div class="col-md-6">
+  <label for="edit-crop-name" class="form-label">Crop Name</label>
+  <input type="text" class="form-control" id="edit-crop-name" name="name" required>
+</div>
+<div class="col-md-6">
+  <label for="edit-crop-price" class="form-label">Price per Unit</label>
+  <div class="input-group">
+    <span class="input-group-text">$</span>
+    <input type="number" step="0.01" min="0.01" class="form-control" id="edit-crop-price" name="price" required>
+    <select class="form-select" id="edit-crop-unit" name="unit" style="max-width: 80px;">
+      <option value="kg">kg</option>
+      <option value="g">g</option>
+      <option value="lb">lb</option>
+      <option value="ton">ton</option>
+    </select>
+  </div>
+</div>
+</div>
+
+<div class="row mb-3">
+<div class="col-md-6">
+  <label for="edit-crop-quantity" class="form-label">Available Quantity</label>
+  <input type="number" min="0" class="form-control" id="edit-crop-quantity" name="quantity" required>
+</div>
+<div class="col-md-6">
+  <label for="edit-crop-location" class="form-label">Harvest Location</label>
+  <input type="text" class="form-control" id="edit-crop-location" name="location" required>
+</div>
+</div>
+
+<div class="mb-3">
+<label for="edit-crop-description" class="form-label">Description</label>
+<textarea class="form-control" id="edit-crop-description" name="description" rows="3" required></textarea>
+</div>
+
+<div class="mb-3">
+<label for="edit-crop-image" class="form-label">Crop Image</label>
+<input type="file" class="form-control" id="edit-crop-image" name="cropImage">
+<small class="text-muted">Leave empty to keep current image</small>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button type="button" class="btn btn-primary" id="update-crop-btn">Update Crop</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Update Order Status Modal -->
+<div class="modal fade" id="updateOrderModal" tabindex="-1" aria-labelledby="updateOrderModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="updateOrderModalLabel">Update Order Status</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<form id="update-order-form">
+<input type="hidden" id="order-id" name="orderId">
+
+<div class="mb-3">
+<label for="order-status" class="form-label">Order Status</label>
+<select class="form-select" id="order-status" name="status" required>
+  <option value="pending">Pending</option>
+  <option value="confirmed">Confirmed</option>
+  <option value="shipped">Shipped</option>
+  <option value="delivered">Delivered</option>
+  <option value="cancelled">Cancelled</option>
+</select>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+<button type="button" class="btn btn-primary" id="update-order-btn">Update Status</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JS -->
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/crops.js"></script>
+<script src="../assets/js/orders.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Protect route - Redirect if not authenticated or not a seller
+if (!protectRoute() || !checkRole(['seller'])) {
+return;
+}
+
+// Set welcome message with seller name
+const user = getCurrentUser();
+document.getElementById('farmer-name').textContent = user.name;
+
+// Load seller's crops
+loadSellerCrops();
+
+// Load seller's orders
+loadSellerOrders();
+
+// Add event listeners for the add crop form
+document.getElementById('save-crop-btn').addEventListener('click', function() {
+const form = document.getElementById('add-crop-form');
+if (form.checkValidity()) {
+const formData = new FormData(form);
+
+// Extract form data
+const cropData = {
+name: formData.get('name'),
+price: parseFloat(formData.get('price')),
+quantity: parseInt(formData.get('quantity')),
+unit: formData.get('unit'),
+location: formData.get('location'),
+description: formData.get('description'),
+harvestDate: formData.get('harvestDate') || new Date().toISOString().split('T')[0]
+};
+
+// Add crop
+addCrop(cropData);
+} else {
+form.reportValidity();
+}
+});
+
+// Add event listeners for the update crop form
+document.getElementById('update-crop-btn').addEventListener('click', function() {
+const form = document.getElementById('edit-crop-form');
+if (form.checkValidity()) {
+const formData = new FormData(form);
+const cropId = document.getElementById('edit-crop-id').value;
+
+// Extract form data
+const cropData = {
+name: formData.get('name'),
+price: parseFloat(formData.get('price')),
+quantity: parseInt(formData.get('quantity')),
+unit: formData.get('unit'),
+location: formData.get('location'),
+description: formData.get('description')
+};
+
+// Update crop
+updateCrop(cropId, cropData);
+} else {
+form.reportValidity();
+}
+});
+
+// Add event listener for the update order status button
+document.getElementById('update-order-btn').addEventListener('click', function() {
+const orderId = document.getElementById('order-id').value;
+const status = document.getElementById('order-status').value;
+
+// Update order status
+updateOrderStatus(orderId, status);
+});
+
+// Add event listeners for sorting and filtering
+document.getElementById('sort-crops').addEventListener('change', function() {
+loadSellerCrops(this.value);
+});
+
+document.getElementById('filter-orders').addEventListener('change', function() {
+filterOrders(this.value);
+});
+
+document.getElementById('search-button').addEventListener('click', function() {
+const searchTerm = document.getElementById('search-crops').value;
+searchCrops(searchTerm);
+});
+
+// Logout functionality
+document.getElementById('logout').addEventListener('click', function(e) {
+e.preventDefault();
+logout();
+});
+});
+
+// Load seller's crops
+async function loadSellerCrops(sortBy = 'newest') {
+try {
+const token = getToken();
+
+// Get crops
+const response = await fetch(`${API_URL}/crops/seller/my-crops`, {
+method: 'GET',
+headers: {
+'Authorization': `Bearer ${token}`
+}
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(data.message || 'Could not fetch crops');
+}
+
+// Update active crops count
+document.getElementById('active-crops-count').textContent = data.count;
+
+// Clear crops list
+const cropsList = document.getElementById('my-crops-list');
+cropsList.innerHTML = '';
+
+// Sort crops
+let crops = data.data;
+if (sortBy === 'newest') {
+crops.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+} else if (sortBy === 'oldest') {
+crops.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+} else if (sortBy === 'price-high') {
+crops.sort((a, b) => b.price - a.price);
+} else if (sortBy === 'price-low') {
+crops.sort((a, b) => a.price - b.price);
+}
+
+// Display crops
+if (crops.length === 0) {
+cropsList.innerHTML = `
+<div class="col-12 text-center py-5">
+<div class="alert alert-info">
+  <i class="fas fa-info-circle me-2"></i>You haven't added any crops yet.
+</div>
+<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addCropModal">
+  <i class="fas fa-plus me-2"></i>Add Your First Crop
+</button>
+</div>
+`;
+} else {
+crops.forEach(crop => {
+cropsList.innerHTML += `
+<div class="col-md-6 col-lg-4 mb-4">
+  <div class="card h-100 crop-card">
+    <img src="${crop.cropImage || '../assets/img/default-crop.png'}" class="card-img-top" alt="${crop.name}">
+    <div class="card-body">
+      <h5 class="card-title">${crop.name}</h5>
+      <p class="card-text">${crop.description.substring(0, 100)}${crop.description.length > 100 ? '...' : ''}</p>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="text-success fw-bold">${crop.price.toFixed(2)}/${crop.unit}</span>
+        <span class="badge bg-primary">${crop.quantity} ${crop.unit} available</span>
+      </div>
+      <p class="card-text"><small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> ${crop.location}</small></p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <small class="text-muted">Added on ${new Date(crop.createdAt).toLocaleDateString()}</small>
+      <div>
+        <button class="btn btn-sm btn-outline-primary edit-crop-btn" data-crop-id="${crop._id}">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger delete-crop-btn" data-crop-id="${crop._id}">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+});
+
+// Add event listeners for edit and delete buttons
+document.querySelectorAll('.edit-crop-btn').forEach(button => {
+button.addEventListener('click', function() {
+const cropId = this.getAttribute('data-crop-id');
+openEditCropModal(cropId);
+});
+});
+
+document.querySelectorAll('.delete-crop-btn').forEach(button => {
+button.addEventListener('click', function() {
+const cropId = this.getAttribute('data-crop-id');
+if (confirm('Are you sure you want to delete this crop?')) {
+  deleteCrop(cropId);
+}
+});
+});
+}
+} catch (error) {
+console.error('Load crops error:', error);
+document.getElementById('my-crops-list').innerHTML = `
+<div class="col-12">
+<div class="alert alert-danger">
+<i class="fas fa-exclamation-circle me-2"></i>Error loading crops: ${error.message}
+</div>
+</div>
+`;
+}
+}
+
+// Add a new crop
+async function addCrop(cropData) {
+try {
+const token = getToken();
+
+const response = await fetch(`${API_URL}/crops`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json',
+'Authorization': `Bearer ${token}`
+},
+body: JSON.stringify(cropData)
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(data.message || 'Could not add crop');
+}
+
+// Hide modal
+const modal = bootstrap.Modal.getInstance(document.getElementById('addCropModal'));
+modal.hide();
+
+// Reset form
+document.getElementById('add-crop-form').reset();
+
+// Reload crops
+loadSellerCrops();
+
+// Show success message
+alert('Crop added successfully!');
+} catch (error) {
+console.error('Add crop error:', error);
+const errorElement = document.getElementById('add-crop-error');
+errorElement.textContent = error.message;
+errorElement.classList.remove('d-none');
+}
+}
+
+// Open edit crop modal with crop data
+async function openEditCropModal(cropId) {
+try {
+const token = getToken();
+
+const response = await fetch(`${API_URL}/crops/${cropId}`, {
+method: 'GET',
+headers: {
+'Authorization': `Bearer ${token}`
+}
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(data.message || 'Could not fetch crop details');
+}
+
+const crop = data.data;
+
+// Fill form with crop data
+document.getElementById('edit-crop-id').value = crop._id;
+document.getElementById('edit-crop-name').value = crop.name;
+document.getElementById('edit-crop-price').value = crop.price;
+document.getElementById('edit-crop-unit').value = crop.unit;
+document.getElementById('edit-crop-quantity').value = crop.quantity;
+document.getElementById('edit-crop-location').value = crop.location;
+document.getElementById('edit-crop-description').value = crop.description;
+
+// Show modal
+const modal = new bootstrap.Modal(document.getElementById('editCropModal'));
+modal.show();
+} catch (error) {
+console.error('Open edit modal error:', error);
+alert(`Error: ${error.message}`);
+}
+}
+
+// Update crop
+async function updateCrop(cropId, cropData) {
+try {
+const token = getToken();
+
+const response = await fetch(`${API_URL}/crops/${cropId}`, {
+method: 'PUT',
+headers: {
+'Content-Type': 'application/json',
+'Authorization': `Bearer ${token}`
+},
+body: JSON.stringify(cropData)
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(data.message || 'Could not update crop');
+}
+
+// Hide modal
+const modal = bootstrap.Modal.getInstance(document.getElementById('editCropModal'));
+modal.hide();
+
+// Reload crops
+loadSellerCrops();
+
+// Show success message
+alert('Crop updated successfully!');
+} catch (error) {
+console.error('Update crop error:', error);
+const errorElement = document.getElementById('edit-crop-error');
+errorElement.textContent = error.message;
+errorElement.classList.remove('d-none');
+}
+}
+
+// Delete crop
+async function deleteCrop(cropId) {
+try {
+const token = getToken();
+
+const response = await fetch(`${API_URL}/crops/${cropId}`, {
+method: 'DELETE',
+headers: {
+'Authorization': `Bearer ${token}`
+}
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(data.message || 'Could not delete crop');
+}
+
+// Reload crops
+loadSellerCrops();
+
+// Show success message
+alert('Crop deleted successfully!');
+} catch (error) {
+console.error('Delete crop error:', error);
+alert(`Error: ${error.message}`);
+}
+}
+
+// Load seller's orders
+async function loadSellerOrders() {
+try {
+const token = getToken();
+
+const response = await fetch(`${API_URL}/orders/seller`, {
+method: 'GET',
+headers: {
+'Authorization': `Bearer ${token}`
+}
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(data.message || 'Could not fetch orders');
+}
+
+const orders = data.data;
+
+// Count pending orders
+const pendingOrders = orders.filter(order => order.status === 'pending');
+document.getElementById('pending-orders-count').textContent = pendingOrders.length;
+
+// Calculate total revenue
+const totalRevenue = orders
+.filter(order => order.status === 'delivered')
+.reduce((sum, order) => sum + order.totalPrice, 0);
+document.getElementById('total-revenue').textContent = `${totalRevenue.toFixed(2)}`;
+
+// Display orders
+const ordersTableBody = document.getElementById('orders-table-body');
+
+if (orders.length === 0) {
+ordersTableBody.innerHTML = `
+<tr>
+<td colspan="8" class="text-center py-4">
+  No orders found
+</td>
+</tr>
+`;
+} else {
+ordersTableBody.innerHTML = '';
+orders.forEach(order => {
+const orderDate = new Date(order.createdAt).toLocaleDateString();
+let statusBadgeClass = '';
+
+switch (order.status) {
+case 'pending':
+  statusBadgeClass = 'bg-warning';
+  break;
+case 'confirmed':
+  statusBadgeClass = 'bg-primary';
+  break;
+case 'shipped':
+  statusBadgeClass = 'bg-info';
+  break;
+case 'delivered':
+  statusBadgeClass = 'bg-success';
+  break;
+case 'cancelled':
+  statusBadgeClass = 'bg-danger';
+  break;
+}
+
+ordersTableBody.innerHTML += `
+<tr data-order-id="${order._id}" data-order-status="${order.status}">
+  <td>${order._id.substring(0, 8)}...</td>
+  <td>${order.customerName}</td>
+  <td>${order.cropName}</td>
+  <td>${order.quantity} ${order.unit}</td>
+  <td>${order.totalPrice.toFixed(2)}</td>
+  <td><span class="badge ${statusBadgeClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+  <td>${orderDate}</td>
+  <td>
+    <button class="btn btn-sm btn-outline-primary update-order-btn" data-order-id="${order._id}" data-order-status="${order.status}">
+      <i class="fas fa-edit"></i>
+    </button>
+  </td>
+</tr>
+`;
+});
+
+// Add event listeners for update order buttons
+document.querySelectorAll('.update-order-btn').forEach(button => {
+button.addEventListener('click', function() {
+const orderId = this.getAttribute('data-order-id');
+const currentStatus = this.getAttribute('data-order-status');
+openUpdateOrderModal(orderId, currentStatus);
+});
+});
+}
+} catch (error) {
+console.error('Load orders error:', error);
+document.getElementById('orders-table-body').innerHTML = `
+<tr>
+<td colspan="8" class="text-center py-4">
+<div class="alert alert-danger">
+  <i class="fas fa-exclamation-circle me-2"></i>Error loading orders: ${error.message}
+</div>
+</td>
+</tr>
+`;
+}
+}
+
+// Open update order modal
+function openUpdateOrderModal(orderId, currentStatus) {
+document.getElementById('order-id').value = orderId;
+document.getElementById('order-status').value = currentStatus;
+
+const modal = new bootstrap.Modal(document.getElementById('updateOrderModal'));
+modal.show();
+}
+
+// Update order status
+async function updateOrderStatus(orderId, status) {
+try {
+const token = getToken();
+
+const response = await fetch(`${API_URL}/orders/${orderId}`, {
+method: 'PUT',
+headers: {
+'Content-Type': 'application/json',
+'Authorization': `Bearer ${token}`
+},
+body: JSON.stringify({ status })
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+throw new Error(data.message || 'Could not update order status');
+}
+
+// Hide modal
+const modal = bootstrap.Modal.getInstance(document.getElementById('updateOrderModal'));
+modal.hide();
+
+// Reload orders
+loadSellerOrders();
+
+// Show success message
+alert('Order status updated successfully!');
+} catch (error) {
+console.error('Update order status error:', error);
+alert(`Error: ${error.message}`);
+}
+}
+
+// Filter orders by status
+function filterOrders(status) {
+const rows = document.querySelectorAll('#orders-table-body tr');
+
+rows.forEach(row => {
+if (status === 'all' || row.getAttribute('data-order-status') === status) {
+row.style.display = '';
+} else {
+row.style.display = 'none';
+}
+});
+}
+
+// Search crops by name
+function searchCrops(term) {
+const cropCards = document.querySelectorAll('.crop-card');
+
+if (!term) {
+cropCards.forEach(card => {
+card.closest('.col-md-6').style.display = '';
+});
+return;
+}
+
+term = term.toLowerCase();
+
+cropCards.forEach(card => {
+const cropName = card.querySelector('.card-title').textContent.toLowerCase();
+const cropDescription = card.querySelector('.card-text').textContent.toLowerCase();
+
+if (cropName.includes(term) || cropDescription.includes(term)) {
+card.closest('.col-md-6').style.display = '';
+} else {
+card.closest('.col-md-6').style.display = 'none';
+}
+});
+}
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmer Dashboard | CropConnect</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Custom CSS -->
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="icon" href="../assets/img/favicon.ico">
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+<div class="container">
+<a class="navbar-brand" href="index.html">
+<i class="fas fa-seedling me-2"></i>CropConnect
+</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item">
+<a class="nav-link" href="index.html">Home</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="browse-crops.html">Browse Crops</a>
+</li>
+<li class="nav-item">
+<a class="nav-link active" href="seller-dashboard.html">My Dashboard</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="profile.html">My Profile</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="#" id="logout">Logout</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+
+<!-- Dashboard Header -->
+<section class="bg-light py-4">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-md-8">
+<h1 class="fw-bold mb-0">Farmer Dashboard</h1>
+<p class="text-muted mb-0" id="welcome-message">Welcome back, <span id="farmer-name">Farmer</span>!</p>
+</div>
+<div class="col-md-4 text-md-end">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCropModal">
+<i class="fas fa-plus me-2"></i>Add New Crop
+</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Dashboard Content -->
+<section class="py-5">
+<div class="container">
+<!-- Stats Row -->
+<div class="row mb-4">
+<div class="col-md-4 mb-4 mb-md-0">
+<div class="card dashboard-card h-100">
+<div class="card-body">
+<div class="d-flex align-items-center mb-3">
+  <div class="bg-light-success rounded-circle p-3 me-3">
+    <i class="fas fa-leaf fa-2x text-success"></i>
+  </div>
+  <div>
+    <h6 class="text-muted mb-1">Active Crops</h6>
+    <h4 class="fw-bold mb-0" id="active-crops-count">0</h4>
+  </div>
+</div>
+<p class="text-muted small">Crops currently available for sale</p>
+</div>
+</div>
+</div>
+<div class="col-md-4 mb-4 mb-md-0">
+<div class="card dashboard-card h-100">
+<div class="card-body">
+<div class="d-flex align-items-center mb-3">
+  <div class="bg-light-warning rounded-circle p-3 me-3">
+    <i class="fas fa-shopping-cart fa-2x text-warning"></i

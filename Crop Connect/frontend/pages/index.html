@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CropConnect | Fresh crops, direct from farms to families</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="../assets/img/favicon.ico">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-seedling me-2"></i>CropConnect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="browse-crops.html">Browse Crops</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="login.html">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-light ms-2" href="register.html">Sign Up</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold">Fresh crops, direct from farms to families</h1>
+      <p class="lead mb-4">Connecting farmers directly with customers for fair prices, transparency, and freshness</p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+        <a href="register.html?role=seller" class="btn btn-primary btn-lg px-4 me-md-2">Join as Farmer</a>
+        <a href="register.html?role=customer" class="btn btn-accent btn-lg px-4">Join as Customer</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-5 fade-in">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold">Why Choose CropConnect?</h2>
+        <p class="lead text-muted">We're revolutionizing how farmers connect with customers</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <div class="rounded-circle bg-light-success p-3 d-inline-block mb-3">
+                <i class="fas fa-hand-holding-usd fa-2x text-success"></i>
+              </div>
+              <h3 class="card-title h5">Fair Prices</h3>
+              <p class="card-text">Farmers earn more, customers pay less by cutting out middlemen</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <div class="rounded-circle bg-light-success p-3 d-inline-block mb-3">
+                <i class="fas fa-leaf fa-2x text-success"></i>
+              </div>
+              <h3 class="card-title h5">Fresh Produce</h3>
+              <p class="card-text">Get the freshest crops directly from farms to your table</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+              <div class="rounded-circle bg-light-success p-3 d-inline-block mb-3">
+                <i class="fas fa-users fa-2x text-success"></i>
+              </div>
+              <h3 class="card-title h5">Community Support</h3>
+              <p class="card-text">Support local farmers and sustainable agriculture practices</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold">How CropConnect Works</h2>
+        <p class="lead text-muted">Simple, transparent, and effective</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <div class="text-center">
+            <div class="rounded-circle bg-white p-3 d-inline-block mb-3 shadow-sm">
+              <i class="fas fa-user-plus fa-2x text-primary"></i>
+            </div>
+            <h3 class="h5">1. Sign Up</h3>
+            <p class="text-muted">Create an account as a farmer or customer</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <div class="text-center">
+            <div class="rounded-circle bg-white p-3 d-inline-block mb-3 shadow-sm">
+              <i class="fas fa-upload fa-2x text-primary"></i>
+            </div>
+            <h3 class="h5">2. List Crops</h3>
+            <p class="text-muted">Farmers list their available crops</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <div class="text-center">
+            <div class="rounded-circle bg-white p-3 d-inline-block mb-3 shadow-sm">
+              <i class="fas fa-shopping-cart fa-2x text-primary"></i>
+            </div>
+            <h3 class="h5">3. Place Orders</h3>
+            <p class="text-muted">Customers browse and place orders</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="text-center">
+            <div class="rounded-circle bg-white p-3 d-inline-block mb-3 shadow-sm">
+              <i class="fas fa-truck fa-2x text-primary"></i>
+            </div>
+            <h3 class="h5">4. Delivery</h3>
+            <p class="text-muted">Receive fresh produce directly</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Crops -->
+  <section class="py-5">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">Featured Crops</h2>
+        <a href="browse-crops.html" class="btn btn-outline-primary">View All</a>
+      </div>
+      <div class="row" id="featured-crops">
+        <!-- Featured crops will be loaded dynamically from JS -->
+        <div class="col-md-4 mb-4">
+          <div class="card crop-card">
+            <img src="../assets/img/crop1.jpg" class="card-img-top" alt="Organic Tomatoes">
+            <div class="card-body">
+              <h5 class="card-title">Organic Tomatoes</h5>
+              <p class="card-text">Fresh organic tomatoes grown with natural fertilizers.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-success fw-bold">$3.50/kg</span>
+                <span class="badge bg-secondary">Organic</span>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted">Green Farms, California</small>
+              <a href="browse-crops.html" class="btn btn-sm btn-primary">View Details</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card crop-card">
+            <img src="../assets/img/crop2.jpg" class="card-img-top" alt="Fresh Potatoes">
+            <div class="card-body">
+              <h5 class="card-title">Fresh Potatoes</h5>
+              <p class="card-text">Locally grown potatoes, perfect for any dish.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-success fw-bold">$1.75/kg</span>
+                <span class="badge bg-primary">Fresh</span>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted">Harvest Fields, Iowa</small>
+              <a href="browse-crops.html" class="btn btn-sm btn-primary">View Details</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card crop-card">
+            <img src="../assets/img/crop3.jpg" class="card-img-top" alt="Organic Carrots">
+            <div class="card-body">
+              <h5 class="card-title">Organic Carrots</h5>
+              <p class="card-text">Sweet and crunchy carrots grown naturally.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-success fw-bold">$2.25/kg</span>
+                <span class="badge bg-secondary">Organic</span>
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              <small class="text-muted">Pure Organics, Oregon</small>
+              <a href="browse-crops.html" class="btn btn-sm btn-primary">View Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold">What Our Users Say</h2>
+        <p class="lead text-muted">Read testimonials from farmers and customers</p>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex mb-3">
+                <img src="../assets/img/farmer1.jpg" class="rounded-circle me-3" width="60" height="60" alt="Farmer">
+                <div>
+                  <h5 class="mb-1">John Doe</h5>
+                  <p class="text-muted mb-0">Apple Orchard Farmer</p>
+                </div>
+              </div>
+              <p class="card-text">"CropConnect has transformed my business. I now get fair prices for my produce and connect directly with the people who enjoy my apples."</p>
+              <div class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex mb-3">
+                <img src="../assets/img/customer1.jpg" class="rounded-circle me-3" width="60" height="60" alt="Customer">
+                <div>
+                  <h5 class="mb-1">Jane Smith</h5>
+                  <p class="text-muted mb-0">Health-Conscious Customer</p>
+                </div>
+              </div>
+              <p class="card-text">"I love knowing exactly where my food comes from. The produce is fresher, healthier, and I'm supporting local farmers directly. Win-win!"</p>
+              <div class="text-warning">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-5 bg-success text-white">
+    <div class="container text-center">
+      <h2 class="fw-bold mb-3">Ready to join CropConnect?</h2>
+      <p class="lead mb-4">Start buying or selling fresh produce today!</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="register.html?role=seller" class="btn btn-light btn-lg px-4 me-sm-3">Register as Farmer</a>
+        <a href="register.html?role=customer" class="btn btn-outline-light btn-lg px-4">Register as Customer</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <h5 class="text-uppercase mb-4">CropConnect</h5>
+          <p>Fresh crops, direct from farms to families.</p>
+          <div class="d-flex">
+            <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Links</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="index.html">Home</a></li>
+            <li class="mb-2"><a href="browse-crops.html">Browse Crops</a></li>
+            <li class="mb-2"><a href="about.html">About Us</a></li>
+            <li class="mb-2"><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Farmers</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="login.html">Login</a></li>
+            <li class="mb-2"><a href="register.html?role=seller">Register</a></li>
+            <li class="mb-2"><a href="#">How to Sell</a></li>
+            <li class="mb-2"><a href="#">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <h5 class="text-uppercase mb-4">Contact Us</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Farm Road, Cropville, CA 98765</li>
+            <li class="mb-2"><i class="fas fa-phone me-2"></i>(123) 456-7890</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@cropconnect.com</li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4 bg-light">
+      <div class="text-center">
+        <p class="mb-0">&copy; 2025 CropConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    // Check if user is logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+      
+      if (token && user) {
+        // Update navbar for logged in users
+        const navbarNav = document.getElementById('navbarNav');
+        const navLinks = navbarNav.querySelector('ul');
+        
+        // Clear existing nav items
+        navLinks.innerHTML = '';
+        
+        // Add common nav items
+        navLinks.innerHTML += `
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="browse-crops.html">Browse Crops</a>
+          </li>
+        `;
+        
+        // Add role-specific items
+        if (user.role === 'seller') {
+          navLinks.innerHTML += `
+            <li class="nav-item">
+              <a class="nav-link" href="seller-dashboard.html">My Dashboard</a>
+            </li>
+          `;
+        } else if (user.role === 'customer') {
+          navLinks.innerHTML += `
+            <li class="nav-item">
+              <a class="nav-link" href="customer-dashboard.html">My Dashboard</a>
+            </li>
+          `;
+        }
+        
+        // Add profile and logout
+        navLinks.innerHTML += `
+          <li class="nav-item">
+            <a class="nav-link" href="profile.html">My Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="logout">Logout</a>
+          </li>
+        `;
+        
+        // Add logout functionality
+        document.getElementById('logout').addEventListener('click', function(e) {
+          e.preventDefault();
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = 'index.html';
+        });
+      }
+      
+      // Load featured crops
+      fetchFeaturedCrops();
+    });
+    
+    // Function to fetch featured crops
+    function fetchFeaturedCrops() {
+      // In a real app, this would fetch from the API
+      // For the hackathon, we'll use the static content already in the HTML
+      console.log('Featured crops would be fetched from API here');
+    }
+  </script>
+</body>
+</html>

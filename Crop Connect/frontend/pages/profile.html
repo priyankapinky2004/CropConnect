@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | CropConnect</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="../assets/img/favicon.ico">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="fas fa-seedling me-2"></i>CropConnect
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto" id="nav-menu">
+          <!-- Navigation will be updated by JavaScript -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Header -->
+  <section class="profile-header">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-3 text-center mb-4 mb-md-0">
+          <img src="../assets/img/default-profile.png" alt="Profile Picture" id="profile-image" class="profile-img">
+          <button class="btn btn-sm btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#changePhotoModal">
+            <i class="fas fa-camera me-2"></i>Change Photo
+          </button>
+        </div>
+        <div class="col-md-9">
+          <h1 class="fw-bold mb-2" id="user-name">User Name</h1>
+          <p class="text-muted mb-2" id="user-email">user@example.com</p>
+          <p class="mb-3">
+            <span class="badge bg-primary" id="user-role">Role</span>
+            <span class="badge bg-secondary" id="join-date">Joined: Date</span>
+          </p>
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            <i class="fas fa-edit me-2"></i>Edit Profile
+          </button>
+          <button class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+            <i class="fas fa-key me-2"></i>Change Password
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Profile Content -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row">
+        <!-- Profile Information -->
+        <div class="col-lg-6 mb-4">
+          <div class="card border-0 shadow">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Profile Information</h5>
+            </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <h6 class="text-muted">Contact Information</h6>
+                <div class="d-flex align-items-center mb-2">
+                  <div class="me-3">
+                    <i class="fas fa-phone text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" id="user-phone">Phone: Not set</p>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="fas fa-map-marker-alt text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" id="user-location">Location: Not set</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="seller-info" class="d-none">
+                <h6 class="text-muted">Seller Information</h6>
+                <div class="d-flex align-items-center mb-2">
+                  <div class="me-3">
+                    <i class="fas fa-leaf text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" id="crops-count">Crops Listed: 0</p>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" id="orders-count">Orders Received: 0</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="customer-info" class="d-none">
+                <h6 class="text-muted">Customer Information</h6>
+                <div class="d-flex align-items-center mb-2">
+                  <div class="me-3">
+                    <i class="fas fa-shopping-basket text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" id="purchases-count">Purchases: 0</p>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i class="fas fa-dollar-sign text-primary"></i>
+                  </div>
+                  <div>
+                    <p class="mb-0" id="total-spent">Total Spent: $0.00</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="col-lg-6 mb-4">
+          <div class="card border-0 shadow">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush" id="recent-activity">
+                <li class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <p class="mb-1">Loading recent activity...</p>
+                    </div>
+                    <span class="text-muted small"></span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="col-12">
+          <div class="card border-0 shadow">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0"><i class="fas fa-link me-2"></i>Quick Links</h5>
+            </div>
+            <div class="card-body">
+              <div class="row text-center" id="quick-links">
+                <!-- Links will be added by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel"><i class="fas fa-edit me-2"></i>Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger d-none" id="edit-profile-error"></div>
+          <form id="edit-profile-form">
+            <div class="mb-3">
+              <label for="edit-name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="edit-name" name="name">
+            </div>
+            <div class="mb-3">
+              <label for="edit-phone" class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="edit-phone" name="phone">
+            </div>
+            <div class="mb-3">
+              <label for="edit-location" class="form-label">Location</label>
+              <input type="text" class="form-control" id="edit-location" name="location">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-profile-btn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Change Password Modal -->
+  <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePasswordModalLabel"><i class="fas fa-key me-2"></i>Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger d-none" id="change-password-error"></div>
+          <form id="change-password-form">
+            <div class="mb-3">
+              <label for="current-password" class="form-label">Current Password</label>
+              <input type="password" class="form-control" id="current-password" name="currentPassword" required>
+            </div>
+            <div class="mb-3">
+              <label for="new-password" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="new-password" name="newPassword" required minlength="6">
+              <small class="text-muted">Password must be at least 6 characters long</small>
+            </div>
+            <div class="mb-3">
+              <label for="confirm-password" class="form-label">Confirm New Password</label>
+              <input type="password" class="form-control" id="confirm-password" name="confirmPassword" required minlength="6">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="change-password-btn">Change Password</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Change Photo Modal -->
+  <div class="modal fade" id="changePhotoModal" tabindex="-1" aria-labelledby="changePhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePhotoModalLabel"><i class="fas fa-camera me-2"></i>Change Profile Photo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger d-none" id="change-photo-error"></div>
+          <form id="change-photo-form">
+            <div class="mb-3">
+              <label for="profile-photo" class="form-label">Select New Photo</label>
+              <input type="file" class="form-control" id="profile-photo" name="profileImage" accept="image/*">
+              <small class="text-muted">Maximum file size: 2MB. Supported formats: JPG, PNG</small>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Preview</label>
+              <div class="text-center">
+                <img id="photo-preview" src="../assets/img/default-profile.png" alt="Preview" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="upload-photo-btn">Upload Photo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <h5 class="text-uppercase mb-4">CropConnect</h5>
+          <p>Fresh crops, direct from farms to families.</p>
+          <div class="d-flex">
+            <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Links</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="index.html">Home</a></li>
+            <li class="mb-2"><a href="browse-crops.html">Browse Crops</a></li>
+            <li class="mb-2"><a href="about.html">About Us</a></li>
+            <li class="mb-2"><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Farmers</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="login.html">Login</a></li>
+            <li class="mb-2"><a href="register.html?role=seller">Register</a></li>
+            <li class="mb-2"><a href="#">How to Sell</a></li>
+            <li class="mb-2"><a href="#">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <h5 class="text-uppercase mb-4">Contact Us</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Farm Road, Cropville, CA 98765</li>
+            <li class="mb-2"><i class="fas fa-phone me-2"></i>(123) 456-7890</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@cropconnect.com</li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4 bg-light">
+      <div class="text-center">
+        <p class="mb-0">&copy; 2025 CropConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Protect route - redirect if not authenticated
+      if (!isAuthenticated()) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Update navigation
+      updateNavigation();
+      
+      // Load user profile
+      loadUserProfile();
+      
+      // Add event listeners
+      document.getElementById('save-profile-btn').addEventListener('click', updateUserProfile);
+      document.getElementById('change-password-btn').addEventListener('click', changePassword);
+      document.getElementById('upload-photo-btn').addEventListener('click', uploadProfilePhoto);
+      
+      // Photo preview
+      document.getElementById('profile-photo').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            document.getElementById('photo-preview').src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    });
+    
+    // Load user profile
+    async function loadUserProfile() {
+      try {
+        // Get user data from local storage
+        let user = getCurrentUser();
+        
+        // Try to fetch fresh user data from server
+        try {
+          user = await fetchUserProfile();
+        } catch (error) {
+          console.warn('Could not fetch fresh user data, using cached data');
+        }
+        
+        // Update profile information
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-email').textContent = user.email;
+        document.getElementById('user-role').textContent = user.role === 'seller' ? 'Farmer' : 'Customer';
+        
+        const joinDate = new Date(user.createdAt || Date.now()).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        document.getElementById('join-date').textContent = `Joined: ${joinDate}`;
+        
+        // Update contact information
+        document.getElementById('user-phone').textContent = user.phone ? `Phone: ${user.phone}` : 'Phone: Not set';
+        document.getElementById('user-location').textContent = user.location ? `Location: ${user.location}` : 'Location: Not set';
+        
+        // Profile image
+        if (user.profileImage && user.profileImage !== 'default-profile.png') {
+          document.getElementById('profile-image').src = user.profileImage;
+        }
+        
+        // Fill edit profile form
+        document.getElementById('edit-name').value = user.name || '';
+        document.getElementById('edit-phone').value = user.phone || '';
+        document.getElementById('edit-location').value = user.location || '';
+        
+        // Show role-specific information
+        if (user.role === 'seller') {
+          document.getElementById('seller-info').classList.remove('d-none');
+          document.getElementById('customer-info').classList.add('d-none');
+          loadSellerStats();
+        } else {
+          document.getElementById('customer-info').classList.remove('d-none');
+          document.getElementById('seller-info').classList.add('d-none');
+          loadCustomerStats();
+        }
+        
+        // Set up quick links
+        setupQuickLinks(user.role);
+        
+        // Load recent activity
+        loadRecentActivity(user.role);
+      } catch (error) {
+        console.error('Load profile error:', error);
+        alert('Error loading profile: ' + error.message);
+      }
+    }
+    
+    // Update user profile
+    async function updateUserProfile() {
+      try {
+        const name = document.getElementById('edit-name').value;
+        const phone = document.getElementById('edit-phone').value;
+        const location = document.getElementById('edit-location').value;
+        
+        // Validate fields
+        if (!name.trim()) {
+          throw new Error('Name is required');
+        }
+        
+        const profileData = {
+          name,
+          phone,
+          location
+        };
+        
+        // Update profile
+        const updatedUser = await updateProfile(profileData);
+        
+        // Hide modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+        modal.hide();
+        
+        // Reload profile
+        loadUserProfile();
+        
+        // Show success message
+        alert('Profile updated successfully!');
+      } catch (error) {
+        console.error('Update profile error:', error);
+        const errorElement = document.getElementById('edit-profile-error');
+        errorElement.textContent = error.message;
+        errorElement.classList.remove('d-none');
+      }
+    }
+    
+    // Change password (mock implementation - would need a proper API endpoint)
+    function changePassword() {
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      
+      // Validate fields
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        const errorElement = document.getElementById('change-password-error');
+        errorElement.textContent = 'All fields are required';
+        errorElement.classList.remove('d-none');
+        return;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        const errorElement = document.getElementById('change-password-error');
+        errorElement.textContent = 'New passwords do not match';
+        errorElement.classList.remove('d-none');
+        return;
+      }
+      
+      if (newPassword.length < 6) {
+        const errorElement = document.getElementById('change-password-error');
+        errorElement.textContent = 'Password must be at least 6 characters long';
+        errorElement.classList.remove('d-none');
+        return;
+      }
+      
+      // For the hackathon, we'll just simulate a successful password change
+      // In a real app, you would call an API endpoint to verify and change the password
+      
+      // Hide modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+      modal.hide();
+      
+      // Reset form
+      document.getElementById('change-password-form').reset();
+      
+      // Show success message
+      alert('Password changed successfully!');
+    }
+    
+    // Upload profile photo (mock implementation - would need proper file upload API)
+    function uploadProfilePhoto() {
+      const fileInput = document.getElementById('profile-photo');
+      
+      if (!fileInput.files || !fileInput.files[0]) {
+        const errorElement = document.getElementById('change-photo-error');
+        errorElement.textContent = 'Please select a file';
+        errorElement.classList.remove('d-none');
+        return;
+      }
+      
+      const file = fileInput.files[0];
+      
+      // Check file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        const errorElement = document.getElementById('change-photo-error');
+        errorElement.textContent = 'File size must be less than 2MB';
+        errorElement.classList.remove('d-none');
+        return;
+      }
+      
+      // Check file type (JPG, PNG only)
+      if (!['image/jpeg', 'image/png'].includes(file.type)) {
+        const errorElement = document.getElementById('change-photo-error');
+        errorElement.textContent = 'Only JPG and PNG files are allowed';
+        errorElement.classList.remove('d-none');
+        return;
+      }
+      
+      // For the hackathon, we'll just simulate a successful upload
+      // In a real app, you would use FormData to upload the file to the server
+      
+      // Update profile image
+      const previewSrc = document.getElementById('photo-preview').src;
+      document.getElementById('profile-image').src = previewSrc;
+      
+      // Hide modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('changePhotoModal'));
+      modal.hide();
+      
+      // Reset form
+      document.getElementById('change-photo-form').reset();
+      
+      // Show success message
+      alert('Profile photo updated successfully!');
+    }
+    
+    // Load seller stats
+    function loadSellerStats() {
+      // For the hackathon, we'll just use placeholder data
+      // In a real app, you would fetch this data from the server
+      
+      document.getElementById('crops-count').textContent = 'Crops Listed: 5';
+      document.getElementById('orders-count').textContent = 'Orders Received: 12';
+    }
+    
+    // Load customer stats
+    function loadCustomerStats() {
+      // For the hackathon, we'll just use placeholder data
+      // In a real app, you would fetch this data from the server
+      
+      document.getElementById('purchases-count').textContent = 'Purchases: 8';
+      document.getElementById('total-spent').textContent = 'Total Spent: $175.50';
+    }
+    
+    // Set up quick links based on user role
+    function setupQuickLinks(role) {
+      const quickLinksContainer = document.getElementById('quick-links');
+      
+      if (role === 'seller') {
+        quickLinksContainer.innerHTML = `
+          <div class="col-md-3 col-6 mb-4">
+            <a href="seller-dashboard.html" class="d-block p-3 rounded bg-light-success text-center text-decoration-none">
+              <i class="fas fa-tachometer-alt fa-2x text-success mb-2"></i>
+              <p class="mb-0">Dashboard</p>
+            </a>
+          </div>
+          <div class="col-md-3 col-6 mb-4">
+            <a href="seller-dashboard.html#crops" class="d-block p-3 rounded bg-light-primary text-center text-decoration-none">
+              <i class="fas fa-leaf fa-2x text-primary mb-2"></i>
+              <p class="mb-0">My Crops</p>
+            </a>
+          </div>
+          <div class="col-md-3 col-6 mb-4">
+            <a href="seller-dashboard.html#orders" class="d-block p-3 rounded bg-light-warning text-center text-decoration-none">
+              <i class="fas fa-shopping-cart fa-2x text-warning mb-2"></i>
+              <p class="mb-0">Orders</p>
+            </a>
+          </div>
+          <div class="col-md-3 col-6 mb-4">
+            <a href="browse-crops.html" class="d-block p-3 rounded bg-light-info text-center text-decoration-none">
+              <i class="fas fa-search fa-2x text-info mb-2"></i>
+              <p class="mb-0">Browse Crops</p>
+            </a>
+          </div>
+        `;
+      } else {
+        quickLinksContainer.innerHTML = `
+          <div class="col-md-3 col-6 mb-4">
+            <a href="customer-dashboard.html" class="d-block p-3 rounded bg-light-success text-center text-decoration-none">
+              <i class="fas fa-tachometer-alt fa-2x text-success mb-2"></i>
+              <p class="mb-0">Dashboard</p>
+            </a>
+          </div>
+          <div class="col-md-3 col-6 mb-4">
+            <a href="browse-crops.html" class="d-block p-3 rounded bg-light-primary text-center text-decoration-none">
+              <i class="fas fa-shopping-basket fa-2x text-primary mb-2"></i>
+              <p class="mb-0">Browse Crops</p>
+            </a>
+          </div>
+          <div class="col-md-3 col-6 mb-4">
+            <a href="customer-dashboard.html#orders" class="d-block p-3 rounded bg-light-warning text-center text-decoration-none">
+              <i class="fas fa-shopping-cart fa-2x text-warning mb-2"></i>
+              <p class="mb-0">My Orders</p>
+            </a>
+          </div>
+          <div class="col-md-3 col-6 mb-4">
+            <a href="customer-dashboard.html#favorites" class="d-block p-3 rounded bg-light-info text-center text-decoration-none">
+              <i class="fas fa-heart fa-2x text-info mb-2"></i>
+              <p class="mb-0">Favorites</p>
+            </a>
+          </div>
+        `;
+      }
+    }
+    
+    // Load recent activity
+    function loadRecentActivity(role) {
+      const recentActivityContainer = document.getElementById('recent-activity');
+      
+      // For the hackathon, we'll just use placeholder data
+      // In a real app, you would fetch this data from the server
+      
+      if (role === 'seller') {
+        recentActivityContainer.innerHTML = `
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-1 fw-bold">New order received</p>
+                <p class="mb-0 small">Customer: John Doe</p>
+              </div>
+              <span class="text-muted small">2 hours ago</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-1 fw-bold">Added new crop</p>
+                <p class="mb-0 small">Organic Tomatoes</p>
+              </div>
+              <span class="text-muted small">Yesterday</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-1 fw-bold">Updated profile information</p>
+                <p class="mb-0 small">Changed contact details</p>
+              </div>
+              <span class="text-muted small">3 days ago</span>
+            </div>
+          </li>
+        `;
+      } else {
+        recentActivityContainer.innerHTML = `
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-1 fw-bold">Placed a new order</p>
+                <p class="mb-0 small">Fresh Potatoes (5kg)</p>
+              </div>
+              <span class="text-muted small">1 day ago</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-1 fw-bold">Order status updated</p>
+                <p class="mb-0 small">Order #12345 has been shipped</p>
+              </div>
+              <span class="text-muted small">3 days ago</span>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-1 fw-bold">Created account</p>
+                <p class="mb-0 small">Welcome to CropConnect!</p>
+              </div>
+              <span class="text-muted small">1 week ago</span>
+            </div>
+          </li>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
+                <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | CropConnect</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs
