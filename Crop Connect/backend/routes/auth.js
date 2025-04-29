@@ -1,21 +1,43 @@
-const express = require('express');
-const {
-  register,
-  login,
-  getMe,
-  updateProfile
-} = require('../controllers/authController');
+const jwt = require('jsonwebtoken');
 
-const { protect } = require('../middleware/auth');
+// Environment variables
+const JWT_SECRET = process.env.JWT_SECRET || 'your_default_jwt_secret';
 
-const router = express.Router();
-console.log("Loading auth.js routes");
-// Public routes
-router.post('/register', register);
-router.post('/login', login);
+/**
+ * Middleware to verify JWT token and add user data to request
+ */
+module.exports = function(req, res, next) {
+  // Get token from header
+  const token = req.header('x-auth-token');
 
-// Protected routes
-router.get('/me', protect, getMe);
-router.put('/update-profile', protect, updateProfile);
+  // Check if no token
+  if (!token) {
+    return res.status(401).json({ 
+      success: false, 
+      message: 'No token, authorization denied' 
+    });
+  }
 
-module.exports = router;
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Add user from payload
+    req.user = decoded.user;
+    next();
+  } catch (err) {
+    console.error('Token verification error:', err.message);
+    
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Token has expired' 
+      });
+    }
+    
+    res.status(401).json({ 
+      success: false, 
+      message: 'Token is not valid' 
+    });
+  }
+};

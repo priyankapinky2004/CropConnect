@@ -1,75 +1,98 @@
-// Save this as E:\CropConnect\Crop Connect\backend\models\User.js
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const Schema = mongoose.Schema;
 
-const UserSchema = new mongoose.Schema({
+// Create User Schema
+const UserSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Please add a name'],
-    trim: true,
-    maxlength: [50, 'Name cannot be more than 50 characters']
+    required: true
   },
   email: {
     type: String,
-    required: [true, 'Please add an email'],
+    required: true,
     unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please add a valid email'
-    ]
+    lowercase: true,
+    trim: true
   },
   password: {
     type: String,
-    required: [true, 'Please add a password'],
-    minlength: [6, 'Password must be at least 6 characters'],
-    select: false // Don't return password in queries
+    required: true,
+    minlength: 6
   },
   role: {
     type: String,
-    enum: ['seller', 'customer'],
-    required: true
+    enum: ['seller', 'customer', 'admin'],
+    default: 'customer'
   },
   phone: {
     type: String,
-    required: [true, 'Please add a phone number']
+    default: ''
   },
   location: {
     type: String,
-    required: [true, 'Please add a location']
+    default: ''
   },
   profileImage: {
     type: String,
-    default: 'default-profile.png'
+    default: 'default-profile.jpg'
   },
-  createdAt: {
+  created: {
     type: Date,
     default: Date.now
+  },
+  // Fields for farmers (sellers)
+  farmName: {
+    type: String,
+    default: ''
+  },
+  farmDescription: {
+    type: String,
+    default: ''
+  },
+  // Fields for customers
+  preferences: {
+    organic: {
+      type: Boolean,
+      default: false
+    },
+    categories: {
+      type: [String],
+      default: []
+    }
+  },
+  // Common fields
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  lastLogin: {
+    type: Date,
+    default: null
   }
+}, {
+  // Enable virtuals
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-// Encrypt password using bcrypt before saving
-UserSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
-    next();
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+// Virtual for user's full profile URL
+UserSchema.virtual('profileUrl').get(function() {
+  return `/profiles/${this._id}`;
 });
 
-// Sign JWT and return
-UserSchema.methods.getSignedJwtToken = function() {
-  return jwt.sign(
-    { id: this._id, role: this.role },
-    process.env.JWT_SECRET || 'hackathon_secret_key',
-    { expiresIn: process.env.JWT_EXPIRE || '30d' }
-  );
+// Method to check if user is seller
+UserSchema.methods.isSeller = function() {
+  return this.role === 'seller';
 };
 
-// Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function(enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+// Method to check if user is customer
+UserSchema.methods.isCustomer = function() {
+  return this.role === 'customer';
+};
+
+// Method to check if user is admin
+UserSchema.methods.isAdmin = function() {
+  return this.role === 'admin';
 };
 
 module.exports = mongoose.model('User', UserSchema);

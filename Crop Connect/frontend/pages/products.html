@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropConnect - My Products</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #3d5166;
+            margin-bottom: 20px;
+        }
+        
+        .menu {
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover {
+            background-color: #3d5166;
+        }
+        
+        .menu-item.active {
+            background-color: #3498db;
+        }
+        
+        .menu-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .menu-link i {
+            margin-right: 10px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .add-product-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .add-product-btn:hover {
+            background-color: #2ecc71;
+        }
+        
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 180px;
+            background-color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-size: 48px;
+        }
+        
+        .product-details {
+            padding: 15px;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .product-price {
+            color: #27ae60;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .product-stock {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 15px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .action-btn.delete {
+            color: #e74c3c;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input, 
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .cancel-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .save-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo">CropConnect</div>
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="seller-dashboard.html" class="menu-link">
+                    <i>📊</i> Dashboard
+                </a>
+            </li>
+            <li class="menu-item active">
+                <a href="products.html" class="menu-link">
+                    <i>🌽</i> My Products
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="orders.html" class="menu-link">
+                    <i>📦</i> Orders
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="analytics.html" class="menu-link">
+                    <i>📈</i> Analytics
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="earnings.html" class="menu-link">
+                    <i>💰</i> Earnings
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="settings.html" class="menu-link">
+                    <i>⚙</i> Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">My Products</h1>
+            <button class="add-product-btn" id="addProductBtn">
+                <span>+</span> Add Product
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Product cards will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Product</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price (₹)</label>
+                    <input type="number" id="productPrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="vegetables">Vegetables</option>
+                        <option value="fruits">Fruits</option>
+                        <option value="grains">Grains</option>
+                        <option value="dairy">Dairy</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productQuantity">Quantity</label>
+                    <input type="number" id="productQuantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">Product Image</label>
+                    <input type="file" id="productImage">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn cancel-btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn save-btn">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample product data
+        let products = [
+            {
+                id: 1,
+                name: "Organic Tomatoes",
+                price: 45,
+                category: "vegetables",
+                quantity: 20,
+                description: "Fresh organic tomatoes from our farm",
+                image: ""
+            },
+            {
+                id: 2,
+                name: "Apples",
+                price: 80,
+                category: "fruits",
+                quantity: 15,
+                description: "Sweet and juicy apples",
+                image: ""
+            },
+            {
+                id: 3,
+                name: "Basmati Rice",
+                price: 120,
+                category: "grains",
+                quantity: 50,
+                description: "Premium quality basmati rice",
+                image: ""
+            }
+        ];
+
+        // DOM Elements
+        const productsGrid = document.getElementById('productsGrid');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const productModal = document.getElementById('productModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const productForm = document.getElementById('productForm');
+
+        // Display products
+        function renderProducts() {
+            productsGrid.innerHTML = '';
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        ${product.name.charAt(0)}
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">₹${product.price}/kg</div>
+                        <div class="product-stock">In stock: ${product.quantity} kg</div>
+                        <div class="product-actions">
+                            <button class="action-btn edit" data-id="${product.id}">Edit</button>
+                            <button class="action-btn delete" data-id="${product.id}">Delete</button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit').forEach(btn => {
+                btn.addEventListener('click', (e) => editProduct(e.target.dataset.id));
+            });
+
+            document.querySelectorAll('.delete').forEach(btn => {
+                btn.addEventListener('click', (e) => deleteProduct(e.target.dataset.id));
+            });
+        }
+
+        // Add new product
+        function addProduct(e) {
+            e.preventDefault();
+            
+            const newProduct = {
+                id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1,
+                name: document.getElementById('productName').value,
+                price: parseFloat(document.getElementById('productPrice').value),
+                category: document.getElementById('productCategory').value,
+                quantity: parseInt(document.getElementById('productQuantity').value),
+                description: document.getElementById('productDescription').value,
+                image: ''
+            };
+
+            products.push(newProduct);
+            renderProducts();
+            closeModal();
+            productForm.reset();
+        }
+
+        // Edit product
+        function editProduct(id) {
+            const product = products.find(p => p.id === parseInt(id));
+            if (product) {
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productQuantity').value = product.quantity;
+                document.getElementById('productDescription').value = product.description;
+                
+                document.querySelector('.modal-title').textContent = 'Edit Product';
+                productForm.onsubmit = function(e) {
+                    e.preventDefault();
+                    updateProduct(id);
+                };
+                
+                openModal();
+            }
+        }
+
+        // Update product
+        function updateProduct(id) {
+            const productIndex = products.findIndex(p => p.id === parseInt(id));
+            if (productIndex !== -1) {
+                products[productIndex] = {
+                    ...products[productIndex],
+                    name: document.getElementById('productName').value,
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    category: document.getElementById('productCategory').value,
+                    quantity: parseInt(document.getElementById('productQuantity').value),
+                    description: document.getElementById('productDescription').value
+                };
+                
+                renderProducts();
+                closeModal();
+                productForm.reset();
+                productForm.onsubmit = addProduct;
+                document.querySelector('.modal-title').textContent = 'Add New Product';
+            }
+        }
+
+        // Delete product
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                products = products.filter(p => p.id !== parseInt(id));
+                renderProducts();
+            }
+        }
+
+        // Modal functions
+        function openModal() {
+            productModal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            productModal.style.display = 'none';
+        }
+
+        // Event Listeners
+        addProductBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        productForm.addEventListener('submit', addProduct);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                closeModal();
+            }
+        });
+
+        // Initialize the page
+        renderProducts();
+    </script>
+</body>
+</html>

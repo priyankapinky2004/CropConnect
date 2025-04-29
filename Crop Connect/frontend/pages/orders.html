@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropConnect - Orders</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #3d5166;
+            margin-bottom: 20px;
+        }
+        
+        .menu {
+            list-style: none;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover {
+            background-color: #3d5166;
+        }
+        
+        .menu-item.active {
+            background-color: #3498db;
+        }
+        
+        .menu-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .menu-link i {
+            margin-right: 10px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        /* Orders Table */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .orders-table th, 
+        .orders-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .orders-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .orders-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .status-completed {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .status-cancelled {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+        
+        .view-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .process-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .cancel-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-group label {
+            margin-right: 10px;
+            font-weight: 500;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .search-box {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 250px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo">CropConnect</div>
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="seller-dashboard.html".html" class="menu-link">
+                    <i>📊</i> Dashboard
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="products.html" class="menu-link">
+                    <i>🌽</i> My Products
+                </a>
+            </li>
+            <li class="menu-item active">
+                <a href="orders.html" class="menu-link">
+                    <i>📦</i> Orders
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="analytics.html" class="menu-link">
+                    <i>📈</i> Analytics
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="earnings.html" class="menu-link">
+                    <i>💰</i> Earnings
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="settings.html" class="menu-link">
+                    <i>⚙</i> Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Orders</h1>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <div class="filter-group">
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All Orders</option>
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="dateFilter">Date:</label>
+                <input type="date" id="dateFilter">
+            </div>
+            <div class="filter-group">
+                <input type="text" id="searchOrders" class="search-box" placeholder="Search orders...">
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+                <!-- Orders will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Sample orders data
+        const orders = [
+            {
+                id: 1001,
+                customer: "Rahul Sharma",
+                date: "2023-05-15",
+                amount: 1250,
+                status: "completed",
+                items: [
+                    { name: "Organic Tomatoes", quantity: 5, price: 45 },
+                    { name: "Apples", quantity: 10, price: 80 }
+                ]
+            },
+            {
+                id: 1002,
+                customer: "Priya Patel",
+                date: "2023-05-16",
+                amount: 800,
+                status: "pending",
+                items: [
+                    { name: "Basmati Rice", quantity: 5, price: 120 },
+                    { name: "Organic Tomatoes", quantity: 2, price: 45 }
+                ]
+            },
+            {
+                id: 1003,
+                customer: "Amit Singh",
+                date: "2023-05-17",
+                amount: 240,
+                status: "pending",
+                items: [
+                    { name: "Apples", quantity: 3, price: 80 }
+                ]
+            },
+            {
+                id: 1004,
+                customer: "Neha Gupta",
+                date: "2023-05-14",
+                amount: 600,
+                status: "cancelled",
+                items: [
+                    { name: "Organic Tomatoes", quantity: 10, price: 45 },
+                    { name: "Basmati Rice", quantity: 1, price: 120 }
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const ordersTableBody = document.getElementById('ordersTableBody');
+        const statusFilter = document.getElementById('statusFilter');
+        const dateFilter = document.getElementById('dateFilter');
+        const searchOrders = document.getElementById('searchOrders');
+
+        // Display orders
+        function renderOrders(filteredOrders = orders) {
+            ordersTableBody.innerHTML = '';
+            filteredOrders.forEach(order => {
+                const row = document.createElement('tr');
+                
+                let statusClass = '';
+                if (order.status === 'pending') statusClass = 'status-pending';
+                else if (order.status === 'completed') statusClass = 'status-completed';
+                else if (order.status === 'cancelled') statusClass = 'status-cancelled';
+                
+                row.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${new Date(order.date).toLocaleDateString()}</td>
+                    <td>₹${order.amount}</td>
+                    <td><span class="order-status ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+                    <td>
+                        <button class="action-btn view-btn" data-id="${order.id}">View</button>
+                        ${order.status === 'pending' ? `
+                            <button class="action-btn process-btn" data-id="${order.id}">Process</button>
+                            <button class="action-btn cancel-btn" data-id="${order.id}">Cancel</button>
+                        ` : ''}
+                    </td>
+                `;
+                ordersTableBody.appendChild(row);
+            });
+
+            // Add event listeners to action buttons
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => viewOrder(e.target.dataset.id));
+            });
+
+            document.querySelectorAll('.process-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => processOrder(e.target.dataset.id));
+            });
+
+            document.querySelectorAll('.cancel-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => cancelOrder(e.target.dataset.id));
+            });
+        }
+
+        // View order details
+        function viewOrder(id) {
+            const order = orders.find(o => o.id === parseInt(id));
+            if (order) {
+                let itemsList = '';
+                order.items.forEach(item => {
+                    itemsList += `${item.name} (${item.quantity} kg) - ₹${item.price}/kg\n`;
+                });
+                
+                alert(`Order #${order.id}\n\nCustomer: ${order.customer}\nDate: ${new Date(order.date).toLocaleDateString()}\nStatus: ${order.status}\n\nItems:\n${itemsList}\nTotal Amount: ₹${order.amount}`);
+            }
+        }
+
+        // Process order
+        function processOrder(id) {
+            const orderIndex = orders.findIndex(o => o.id === parseInt(id));
+            if (orderIndex !== -1 && orders[orderIndex].status === 'pending') {
+                orders[orderIndex].status = 'completed';
+                renderOrders();
+                alert(`Order #${id} has been marked as completed.`);
+            }
+        }
+
+        // Cancel order
+        function cancelOrder(id) {
+            const orderIndex = orders.findIndex(o => o.id === parseInt(id));
+            if (orderIndex !== -1 && orders[orderIndex].status === 'pending') {
+                if (confirm('Are you sure you want to cancel this order?')) {
+                    orders[orderIndex].status = 'cancelled';
+                    renderOrders();
+                    alert(`Order #${id} has been cancelled.`);
+                }
+            }
+        }
+
+        // Filter orders
+        function filterOrders() {
+            let filtered = [...orders];
+            
+            // Filter by status
+            if (statusFilter.value !== 'all') {
+                filtered = filtered.filter(order => order.status === statusFilter.value);
+            }
+            
+            // Filter by date
+            if (dateFilter.value) {
+                filtered = filtered.filter(order => order.date === dateFilter.value);
+            }
+            
+            // Filter by search term
+            if (searchOrders.value) {
+                const searchTerm = searchOrders.value.toLowerCase();
+                filtered = filtered.filter(order => 
+                    order.customer.toLowerCase().includes(searchTerm) || 
+                    order.id.toString().includes(searchTerm)
+                );
+            }
+            
+            renderOrders(filtered);
+        }
+
+        // Event Listeners
+        statusFilter.addEventListener('change', filterOrders);
+        dateFilter.addEventListener('change', filterOrders);
+        searchOrders.addEventListener('input', filterOrders);
+
+        // Initialize the page
+        renderOrders();
+    </script>
+</body>
+</html>

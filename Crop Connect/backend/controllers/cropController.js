@@ -1,36 +1,114 @@
-const Crop = require('../models/Crop');
-const User = require('../models/User');
+
+// backend/controllers/cropController.js
+const { db, admin, storage } = require('../firebase');
+const multer = require('multer');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+
+// Setup multer for file uploads
+const multerStorage = multer.memoryStorage();
+const upload = multer({
+  storage: multerStorage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
+
+// Helper function to upload a file to Firebase Storage
+const uploadFileToFirebase = async (file) => {
+  try {
+    if (!file) return null;
+    
+    const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+    const filePath = `crops/${fileName}`;
+    const fileUpload = storage.file(filePath);
+    
+    const fileStream = fileUpload.createWriteStream({
+      metadata: {
+        contentType: file.mimetype
+      }
+    });
+    
+    return new Promise((resolve, reject) => {
+      fileStream.on('error', (error) => {
+        reject(error);
+      });
+      
+      fileStream.on('finish', async () => {
+        // Make the file publicly accessible
+        await fileUpload.makePublic();
+        
+        // Get public URL
+        const publicUrl = `https://storage.googleapis.com/${storage.name}/${filePath}`;
+        resolve(publicUrl);
+      });
+      
+      fileStream.end(file.buffer);
+    });
+  } catch (error) {
+    console.error('File upload error:', error);
+    throw error;
+  }
+};
 
 // @desc    Add a new crop
 // @route   POST /api/crops
 // @access  Private (Sellers only)
 exports.addCrop = async (req, res) => {
   try {
-    // Add seller ID and name to the request body
-    req.body.sellerId = req.user.id;
-    req.body.sellerName = req.user.name;
-    
-    // Check if seller exists
-    const seller = await User.findById(req.user.id);
-    if (!seller || seller.role !== 'seller') {
-      return res.status(403).json({
-        success: false,
-        message: 'Only sellers can add crops'
-      });
-    }
-
-    // Create the crop
-    const crop = await Crop.create(req.body);
-
-    res.status(201).json({
-      success: true,
-      data: crop
+    upload.single('cropImage')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          message: 'File upload error',
+          error: err.message
+        });
+      }
+      
+      try {
+        const { name, description, price, quantity, unit, location, harvestDate } = req.body;
+        
+        // Upload image if provided
+        let cropImage = 'default-crop.png';
+        if (req.file) {
+          cropImage = await uploadFileToFirebase(req.file);
+        }
+        
+        // Create crop in Firestore
+        const cropRef = db.collection('crops').doc();
+        const cropData = {
+          id: cropRef.id,
+          name,
+          description,
+          price: parseFloat(price),
+          quantity: parseInt(quantity),
+          unit: unit || 'kg',
+          location,
+          harvestDate: harvestDate || new Date().toISOString(),
+          cropImage,
+          sellerId: req.user.uid,
+          sellerName: req.user.name,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        
+        await cropRef.set(cropData);
+        
+        res.status(201).json({
+          success: true,
+          data: cropData
+        });
+      } catch (error) {
+        console.error('Add crop error:', error);
+        res.status(500).json({
+          success: false,
+          message: 'Could not add crop',
+          error: error.message
+        });
+      }
     });
   } catch (error) {
-    console.error('Add crop error:', error);
+    console.error('Add crop outer error:', error);
     res.status(500).json({
       success: false,
-      message: 'Could not add crop',
+      message: 'Could not process request',
       error: error.message
     });
   }
@@ -42,34 +120,77 @@ exports.addCrop = async (req, res) => {
 exports.getCrops = async (req, res) => {
   try {
     // Query parameters
-    const { sort, location } = req.query;
+    const { sort, location, category } = req.query;
     
     // Build query
-    let query = {};
+    let cropsQuery = db.collection('crops');
     
     // Filter by location if provided
     if (location) {
-      query.location = { $regex: location, $options: 'i' };
+      // In Firestore, we need a different approach as there's no regex
+      // This is a simple "starts with" query
+      cropsQuery = cropsQuery
+        .where('location', '>=', location)
+        .where('location', '<=', location + '\uf8ff');
+    }
+    
+    // Filter by category if provided (assuming we have category field)
+    if (category && category !== 'all') {
+      cropsQuery = cropsQuery.where('category', '==', category);
     }
     
     // Execute query
-    let crops = Crop.find(query);
+    const cropsSnapshot = await cropsQuery.get();
+    
+    // Convert to array
+    let crops = [];
+    cropsSnapshot.forEach((doc) => {
+      crops.push({
+        ...doc.data(),
+        id: doc.id
+      });
+    });
     
     // Sort results
     if (sort) {
-      const sortFields = sort.split(',').join(' ');
-      crops = crops.sort(sortFields);
+      const sortFields = sort.split(',');
+      sortFields.forEach(field => {
+        if (field.startsWith('-')) {
+          // Descending order
+          const actualField = field.substring(1);
+          crops.sort((a, b) => {
+            if (typeof a[actualField] === 'string') {
+              return b[actualField].localeCompare(a[actualField]);
+            }
+            return b[actualField] - a[actualField];
+          });
+        } else {
+          // Ascending order
+          crops.sort((a, b) => {
+            if (typeof a[field] === 'string') {
+              return a[field].localeCompare(b[field]);
+            }
+            return a[field] - b[field];
+          });
+        }
+      });
     } else {
-      crops = crops.sort('-createdAt'); // Default sort by newest
+      // Default sort by newest
+      crops.sort((a, b) => {
+        if (a.createdAt && b.createdAt) {
+          if (a.createdAt.toMillis && b.createdAt.toMillis) {
+            return b.createdAt.toMillis() - a.createdAt.toMillis();
+          }
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        }
+        return 0;
+      });
     }
-
-    // Execute query
-    const results = await crops;
 
     res.status(200).json({
       success: true,
-      count: results.length,
-      data: results
+      count: crops.length,
+      data: crops
     });
   } catch (error) {
     console.error('Get crops error:', error);
@@ -86,9 +207,9 @@ exports.getCrops = async (req, res) => {
 // @access  Public
 exports.getCrop = async (req, res) => {
   try {
-    const crop = await Crop.findById(req.params.id);
+    const cropDoc = await db.collection('crops').doc(req.params.id).get();
 
-    if (!crop) {
+    if (!cropDoc.exists) {
       return res.status(404).json({
         success: false,
         message: 'Crop not found'
@@ -97,7 +218,10 @@ exports.getCrop = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: crop
+      data: {
+        ...cropDoc.data(),
+        id: cropDoc.id
+      }
     });
   } catch (error) {
     console.error('Get crop error:', error);
@@ -114,38 +238,96 @@ exports.getCrop = async (req, res) => {
 // @access  Private (Seller only)
 exports.updateCrop = async (req, res) => {
   try {
-    let crop = await Crop.findById(req.params.id);
+    upload.single('cropImage')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          message: 'File upload error',
+          error: err.message
+        });
+      }
+      
+      try {
+        const cropDoc = await db.collection('crops').doc(req.params.id).get();
 
-    if (!crop) {
-      return res.status(404).json({
-        success: false,
-        message: 'Crop not found'
-      });
-    }
+        if (!cropDoc.exists) {
+          return res.status(404).json({
+            success: false,
+            message: 'Crop not found'
+          });
+        }
 
-    // Make sure user is the crop seller
-    if (crop.sellerId.toString() !== req.user.id) {
-      return res.status(401).json({
-        success: false,
-        message: 'Not authorized to update this crop'
-      });
-    }
+        const cropData = cropDoc.data();
 
-    // Update crop
-    crop = await Crop.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+        // Make sure user is the crop seller
+        if (cropData.sellerId !== req.user.uid) {
+          return res.status(401).json({
+            success: false,
+            message: 'Not authorized to update this crop'
+          });
+        }
 
-    res.status(200).json({
-      success: true,
-      data: crop
+        // Upload new image if provided
+        let imageUrl = cropData.cropImage;
+        if (req.file) {
+          // Delete old image if it's not the default
+          if (cropData.cropImage && cropData.cropImage !== 'default-crop.png') {
+            // Extract filename from URL
+            const fileName = cropData.cropImage.split('/').pop();
+            try {
+              await storage.file(`crops/${fileName}`).delete();
+            } catch (error) {
+              console.warn('Could not delete old image:', error);
+            }
+          }
+          
+          // Upload new image
+          imageUrl = await uploadFileToFirebase(req.file);
+        }
+
+        // Prepare update data
+        const { name, description, price, quantity, unit, location, harvestDate } = req.body;
+        
+        const updateData = {
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        
+        if (name) updateData.name = name;
+        if (description) updateData.description = description;
+        if (price) updateData.price = parseFloat(price);
+        if (quantity) updateData.quantity = parseInt(quantity);
+        if (unit) updateData.unit = unit;
+        if (location) updateData.location = location;
+        if (harvestDate) updateData.harvestDate = harvestDate;
+        if (imageUrl) updateData.cropImage = imageUrl;
+        
+        // Update crop
+        await db.collection('crops').doc(req.params.id).update(updateData);
+
+        // Get updated crop
+        const updatedCropDoc = await db.collection('crops').doc(req.params.id).get();
+
+        res.status(200).json({
+          success: true,
+          data: {
+            ...updatedCropDoc.data(),
+            id: req.params.id
+          }
+        });
+      } catch (error) {
+        console.error('Update crop error:', error);
+        res.status(500).json({
+          success: false,
+          message: 'Could not update crop',
+          error: error.message
+        });
+      }
     });
   } catch (error) {
-    console.error('Update crop error:', error);
+    console.error('Update crop outer error:', error);
     res.status(500).json({
       success: false,
-      message: 'Could not update crop',
+      message: 'Could not process request',
       error: error.message
     });
   }
@@ -156,24 +338,38 @@ exports.updateCrop = async (req, res) => {
 // @access  Private (Seller only)
 exports.deleteCrop = async (req, res) => {
   try {
-    const crop = await Crop.findById(req.params.id);
+    const cropDoc = await db.collection('crops').doc(req.params.id).get();
 
-    if (!crop) {
+    if (!cropDoc.exists) {
       return res.status(404).json({
         success: false,
         message: 'Crop not found'
       });
     }
 
+    const cropData = cropDoc.data();
+
     // Make sure user is the crop seller
-    if (crop.sellerId.toString() !== req.user.id) {
+    if (cropData.sellerId !== req.user.uid) {
       return res.status(401).json({
         success: false,
         message: 'Not authorized to delete this crop'
       });
     }
 
-    await Crop.findByIdAndDelete(req.params.id);
+    // Delete image if it's not the default
+    if (cropData.cropImage && cropData.cropImage !== 'default-crop.png') {
+      // Extract filename from URL
+      const fileName = cropData.cropImage.split('/').pop();
+      try {
+        await storage.file(`crops/${fileName}`).delete();
+      } catch (error) {
+        console.warn('Could not delete image:', error);
+      }
+    }
+
+    // Delete crop document
+    await db.collection('crops').doc(req.params.id).delete();
 
     res.status(200).json({
       success: true,
@@ -194,7 +390,17 @@ exports.deleteCrop = async (req, res) => {
 // @access  Private (Seller only)
 exports.getSellerCrops = async (req, res) => {
   try {
-    const crops = await Crop.find({ sellerId: req.user.id });
+    const cropsSnapshot = await db.collection('crops')
+                               .where('sellerId', '==', req.user.uid)
+                               .get();
+    
+    let crops = [];
+    cropsSnapshot.forEach(doc => {
+      crops.push({
+        ...doc.data(),
+        id: doc.id
+      });
+    });
 
     res.status(200).json({
       success: true,

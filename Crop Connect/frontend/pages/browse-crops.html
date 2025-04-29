@@ -1,924 +1,849 @@
-<select class="form-select form-select-sm" id="sort-select">
-    <option value="newest">Newest First</option>
-    <option value="price-low">Price: Low to High</option>
-    <option value="price-high">Price: High to Low</option>
-    <option value="name-asc">Name: A to Z</option>
-    <option value="name-desc">Name: Z to A</option>
-  </select>
-</div>
-
-<!-- Apply Filters Button -->
-<button class="btn btn-primary w-100" id="apply-filters-btn">
-  <i class="fas fa-filter me-2"></i>Apply Filters
-</button>
-
-<!-- Clear Filters Link -->
-<div class="text-center mt-2">
-  <a href="#" id="clear-filters-link">Clear All Filters</a>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Crops List -->
-<div class="col-lg-9">
-<!-- Crop Categories -->
-<div class="d-flex flex-wrap mb-4 category-filter">
-<button class="btn btn-outline-secondary me-2 mb-2 active" data-category="all">All Crops</button>
-<button class="btn btn-outline-secondary me-2 mb-2" data-category="vegetables">Vegetables</button>
-<button class="btn btn-outline-secondary me-2 mb-2" data-category="fruits">Fruits</button>
-<button class="btn btn-outline-secondary me-2 mb-2" data-category="grains">Grains</button>
-<button class="btn btn-outline-secondary me-2 mb-2" data-category="herbs">Herbs</button>
-<button class="btn btn-outline-secondary me-2 mb-2" data-category="other">Other</button>
-</div>
-
-<!-- Results Summary -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-<p class="mb-0"><span id="results-count">0</span> crops found</p>
-<div class="d-flex align-items-center">
-<span class="me-2">View:</span>
-<div class="btn-group" role="group">
-  <button type="button" class="btn btn-outline-secondary active" id="grid-view-btn">
-    <i class="fas fa-th-large"></i>
-  </button>
-  <button type="button" class="btn btn-outline-secondary" id="list-view-btn">
-    <i class="fas fa-list"></i>
-  </button>
-</div>
-</div>
-</div>
-
-<!-- Crops Grid -->
-<div class="row" id="crops-grid">
-<!-- Crops will be loaded here dynamically -->
-<div class="col-12 text-center py-5">
-<div class="spinner-border text-primary" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div>
-</div>
-</div>
-
-<!-- Pagination -->
-<nav aria-label="Page navigation" class="mt-4">
-<ul class="pagination justify-content-center" id="pagination">
-<li class="page-item disabled">
-  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-</li>
-<li class="page-item active"><a class="page-link" href="#">1</a></li>
-<li class="page-item"><a class="page-link" href="#">2</a></li>
-<li class="page-item"><a class="page-link" href="#">3</a></li>
-<li class="page-item">
-  <a class="page-link" href="#">Next</a>
-</li>
-</ul>
-</nav>
-</div>
-</div>
-</div>
-</section>
-
-<!-- Crop Details Modal -->
-<div class="modal fade" id="cropDetailsModal" tabindex="-1" aria-labelledby="cropDetailsModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="cropDetailsModalLabel">Crop Details</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body" id="crop-details-content">
-<!-- Crop details will be loaded here dynamically -->
-<div class="text-center py-3">
-<div class="spinner-border text-primary" role="status">
-<span class="visually-hidden">Loading...</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Order Form Modal -->
-<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="orderModalLabel">Place Order</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-<div class="alert alert-danger d-none" id="order-error"></div>
-<form id="order-form">
-<input type="hidden" id="crop-id" name="cropId">
-
-<div class="mb-3">
-<label for="crop-name-display" class="form-label">Crop</label>
-<input type="text" class="form-control" id="crop-name-display" readonly>
-</div>
-
-<div class="mb-3">
-<label for="order-quantity" class="form-label">Quantity</label>
-<div class="input-group">
-  <input type="number" class="form-control" id="order-quantity" name="quantity" min="1" required>
-  <span class="input-group-text" id="quantity-unit">kg</span>
-</div>
-<small class="text-muted">Available: <span id="available-quantity">0</span> <span id="available-unit">kg</span></small>
-</div>
-
-<div class="mb-3">
-<label for="order-price" class="form-label">Price per Unit</label>
-<div class="input-group">
-  <span class="input-group-text">$</span>
-  <input type="text" class="form-control" id="order-price" readonly>
-</div>
-</div>
-
-<div class="mb-3">
-<label for="order-total" class="form-label">Total Price</label>
-<div class="input-group">
-  <span class="input-group-text">$</span>
-  <input type="text" class="form-control" id="order-total" readonly>
-</div>
-</div>
-
-<div class="mb-3">
-<label for="delivery-address" class="form-label">Delivery Address</label>
-<textarea class="form-control" id="delivery-address" name="deliveryAddress" rows="3" required></textarea>
-</div>
-
-<div class="mb-3">
-<label for="contact-phone" class="form-label">Contact Phone</label>
-<input type="tel" class="form-control" id="contact-phone" name="contactPhone" required>
-</div>
-</form>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-<button type="button" class="btn btn-primary" id="place-order-btn">Place Order</button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Footer -->
-<footer>
-<div class="container">
-<div class="row">
-<div class="col-lg-4 mb-4 mb-lg-0">
-<h5 class="text-uppercase mb-4">CropConnect</h5>
-<p>Fresh crops, direct from farms to families.</p>
-<div class="d-flex">
-<a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
-<a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
-<a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
-<a href="#"><i class="fab fa-linkedin-in"></i></a>
-</div>
-</div>
-<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-<h5 class="text-uppercase mb-4">Links</h5>
-<ul class="list-unstyled mb-0">
-<li class="mb-2"><a href="index.html">Home</a></li>
-<li class="mb-2"><a href="browse-crops.html">Browse Crops</a></li>
-<li class="mb-2"><a href="about.html">About Us</a></li>
-<li class="mb-2"><a href="contact.html">Contact</a></li>
-</ul>
-</div>
-<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-<h5 class="text-uppercase mb-4">Farmers</h5>
-<ul class="list-unstyled mb-0">
-<li class="mb-2"><a href="login.html">Login</a></li>
-<li class="mb-2"><a href="register.html?role=seller">Register</a></li>
-<li class="mb-2"><a href="#">How to Sell</a></li>
-<li class="mb-2"><a href="#">Pricing</a></li>
-</ul>
-</div>
-<div class="col-lg-4 col-md-4">
-<h5 class="text-uppercase mb-4">Contact Us</h5>
-<ul class="list-unstyled">
-<li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Farm Road, Cropville, CA 98765</li>
-<li class="mb-2"><i class="fas fa-phone me-2"></i>(123) 456-7890</li>
-<li class="mb-2"><i class="fas fa-envelope me-2"></i>info@cropconnect.com</li>
-</ul>
-</div>
-</div>
-<hr class="my-4 bg-light">
-<div class="text-center">
-<p class="mb-0">&copy; 2025 CropConnect. All rights reserved.</p>
-</div>
-</div>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Custom JS -->
-<script src="../assets/js/auth.js"></script>
-<script src="../assets/js/crops.js"></script>
-<script>
-// Global variables
-let allCrops = []; // Stores all loaded crops
-let filteredCrops = []; // Stores currently filtered crops
-let currentPage = 1;
-const cropsPerPage = 9;
-
-document.addEventListener('DOMContentLoaded', function() {
-// Check if user is logged in
-updateNavMenu();
-
-// Load all crops
-loadCrops();
-
-// Add event listeners
-document.getElementById('apply-filters-btn').addEventListener('click', applyFilters);
-document.getElementById('clear-filters-link').addEventListener('click', clearFilters);
-document.getElementById('search-btn').addEventListener('click', searchCrops);
-
-// Category filter buttons
-document.querySelectorAll('.category-filter button').forEach(button => {
-button.addEventListener('click', function() {
-// Remove active class from all buttons
-document.querySelectorAll('.category-filter button').forEach(btn => {
-btn.classList.remove('active');
-});
-
-// Add active class to clicked button
-this.classList.add('active');
-
-// Filter crops by category
-const category = this.getAttribute('data-category');
-filterCropsByCategory(category);
-});
-});
-
-// View toggle buttons
-document.getElementById('grid-view-btn').addEventListener('click', function() {
-document.getElementById('crops-grid').classList.remove('list-view');
-this.classList.add('active');
-document.getElementById('list-view-btn').classList.remove('active');
-});
-
-document.getElementById('list-view-btn').addEventListener('click', function() {
-document.getElementById('crops-grid').classList.add('list-view');
-this.classList.add('active');
-document.getElementById('grid-view-btn').classList.remove('active');
-});
-
-// Handle order form submission
-document.getElementById('place-order-btn').addEventListener('click', placeOrder);
-
-// Update total price when quantity changes
-document.getElementById('order-quantity').addEventListener('input', updateOrderTotal);
-});
-
-// Update navigation menu based on login status
-function updateNavMenu() {
-const user = getCurrentUser();
-const token = getToken();
-
-if (token && user) {
-const navMenu = document.getElementById('nav-menu');
-navMenu.innerHTML = `
-<li class="nav-item">
-<a class="nav-link" href="index.html">Home</a>
-</li>
-<li class="nav-item">
-<a class="nav-link active" href="browse-crops.html">Browse Crops</a>
-</li>
-`;
-
-if (user.role === 'seller') {
-navMenu.innerHTML += `
-<li class="nav-item">
-<a class="nav-link" href="seller-dashboard.html">My Dashboard</a>
-</li>
-`;
-} else if (user.role === 'customer') {
-navMenu.innerHTML += `
-<li class="nav-item">
-<a class="nav-link" href="customer-dashboard.html">My Dashboard</a>
-</li>
-`;
-}
-
-navMenu.innerHTML += `
-<li class="nav-item">
-<a class="nav-link" href="profile.html">My Profile</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#" id="logout-link">Logout</a>
-</li>
-`;
-
-// Add logout event listener
-document.getElementById('logout-link').addEventListener('click', function(e) {
-e.preventDefault();
-logout();
-});
-}
-}
-
-// Load all crops from API
-async function loadCrops() {
-try {
-const response = await fetch(`${API_URL}/crops`);
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not fetch crops');
-}
-
-allCrops = data.data;
-filteredCrops = [...allCrops];
-
-// Update results count
-document.getElementById('results-count').textContent = filteredCrops.length;
-
-// Display crops
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-} catch (error) {
-console.error('Load crops error:', error);
-document.getElementById('crops-grid').innerHTML = `
-<div class="col-12">
-<div class="alert alert-danger">
-<i class="fas fa-exclamation-circle me-2"></i>Error loading crops: ${error.message}
-</div>
-</div>
-`;
-}
-}
-
-// Display crops for the current page
-function displayCrops(crops, page) {
-const startIndex = (page - 1) * cropsPerPage;
-const endIndex = startIndex + cropsPerPage;
-const paginatedCrops = crops.slice(startIndex, endIndex);
-
-const cropsGrid = document.getElementById('crops-grid');
-cropsGrid.innerHTML = '';
-
-if (paginatedCrops.length === 0) {
-cropsGrid.innerHTML = `
-<div class="col-12 text-center py-5">
-<div class="alert alert-info">
-<i class="fas fa-info-circle me-2"></i>No crops found matching your criteria.
-</div>
-<button class="btn btn-primary mt-3" id="reset-search-btn">
-<i class="fas fa-sync me-2"></i>Reset Search
-</button>
-</div>
-`;
-
-document.getElementById('reset-search-btn').addEventListener('click', function() {
-clearFilters();
-});
-
-return;
-}
-
-paginatedCrops.forEach(crop => {
-cropsGrid.innerHTML += `
-<div class="col-md-6 col-lg-4 mb-4">
-<div class="card crop-card h-100">
-<img src="${crop.cropImage || '../assets/img/default-crop.png'}" class="card-img-top" alt="${crop.name}">
-<div class="card-body">
-  <h5 class="card-title">${crop.name}</h5>
-  <p class="card-text">${crop.description.substring(0, 100)}${crop.description.length > 100 ? '...' : ''}</p>
-  <div class="d-flex justify-content-between align-items-center">
-    <span class="text-success fw-bold">${crop.price.toFixed(2)}/${crop.unit}</span>
-    <span class="badge bg-primary">${crop.quantity} ${crop.unit} available</span>
-  </div>
-</div>
-<div class="card-footer d-flex justify-content-between align-items-center">
-  <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> ${crop.location}</small>
-  <div>
-    <button class="btn btn-sm btn-outline-primary view-crop-btn" data-crop-id="${crop._id}">
-      <i class="fas fa-eye"></i> View
-    </button>
-    <button class="btn btn-sm btn-primary order-crop-btn" data-crop-id="${crop._id}">
-      <i class="fas fa-shopping-cart"></i> Order
-    </button>
-  </div>
-</div>
-</div>
-</div>
-`;
-});
-
-// Add event listeners for view and order buttons
-document.querySelectorAll('.view-crop-btn').forEach(button => {
-button.addEventListener('click', function() {
-const cropId = this.getAttribute('data-crop-id');
-viewCropDetails(cropId);
-});
-});
-
-document.querySelectorAll('.order-crop-btn').forEach(button => {
-button.addEventListener('click', function() {
-const cropId = this.getAttribute('data-crop-id');
-openOrderModal(cropId);
-});
-});
-}
-
-// Set up pagination
-function setupPagination(totalCrops) {
-const totalPages = Math.ceil(totalCrops / cropsPerPage);
-const pagination = document.getElementById('pagination');
-pagination.innerHTML = '';
-
-// Previous button
-const prevLi = document.createElement('li');
-prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-prevLi.innerHTML = `<a class="page-link" href="#" ${currentPage === 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>Previous</a>`;
-pagination.appendChild(prevLi);
-
-// Page numbers
-for (let i = 1; i <= totalPages; i++) {
-const pageLi = document.createElement('li');
-pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
-pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-pagination.appendChild(pageLi);
-
-// Add click event
-pageLi.addEventListener('click', function(e) {
-e.preventDefault();
-currentPage = i;
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-window.scrollTo(0, 0);
-});
-}
-
-// Next button
-const nextLi = document.createElement('li');
-nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-nextLi.innerHTML = `<a class="page-link" href="#" ${currentPage === totalPages ? 'tabindex="-1" aria-disabled="true"' : ''}>Next</a>`;
-pagination.appendChild(nextLi);
-
-// Add click events for prev/next
-if (currentPage > 1) {
-prevLi.addEventListener('click', function(e) {
-e.preventDefault();
-currentPage--;
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-window.scrollTo(0, 0);
-});
-}
-
-if (currentPage < totalPages) {
-nextLi.addEventListener('click', function(e) {
-e.preventDefault();
-currentPage++;
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-window.scrollTo(0, 0);
-});
-}
-}
-
-// Apply filters
-function applyFilters() {
-const priceMin = parseFloat(document.getElementById('price-min').value) || 0;
-const priceMax = parseFloat(document.getElementById('price-max').value) || Infinity;
-const location = document.getElementById('location-filter').value.toLowerCase();
-const sortBy = document.getElementById('sort-select').value;
-
-// Filter crops
-filteredCrops = allCrops.filter(crop => {
-const priceMatch = crop.price >= priceMin && crop.price <= priceMax;
-const locationMatch = !location || crop.location.toLowerCase().includes(location);
-return priceMatch && locationMatch;
-});
-
-// Sort crops
-sortCrops(sortBy);
-
-// Reset to first page
-currentPage = 1;
-
-// Update results count
-document.getElementById('results-count').textContent = filteredCrops.length;
-
-// Display crops
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-}
-
-// Sort crops based on selected option
-function sortCrops(sortBy) {
-switch (sortBy) {
-case 'newest':
-filteredCrops.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-break;
-case 'price-low':
-filteredCrops.sort((a, b) => a.price - b.price);
-break;
-case 'price-high':
-filteredCrops.sort((a, b) => b.price - a.price);
-break;
-case 'name-asc':
-filteredCrops.sort((a, b) => a.name.localeCompare(b.name));
-break;
-case 'name-desc':
-filteredCrops.sort((a, b) => b.name.localeCompare(a.name));
-break;
-}
-}
-
-// Clear all filters
-function clearFilters(e) {
-if (e) e.preventDefault();
-
-// Reset filter inputs
-document.getElementById('price-min').value = '';
-document.getElementById('price-max').value = '';
-document.getElementById('location-filter').value = '';
-document.getElementById('sort-select').value = 'newest';
-document.getElementById('search-input').value = '';
-
-// Reset category filters
-document.querySelectorAll('.category-filter button').forEach(btn => {
-btn.classList.remove('active');
-});
-document.querySelector('.category-filter button[data-category="all"]').classList.add('active');
-
-// Reset filtered crops
-filteredCrops = [...allCrops];
-
-// Reset to first page
-currentPage = 1;
-
-// Update results count
-document.getElementById('results-count').textContent = filteredCrops.length;
-
-// Display crops
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-}
-
-// Search crops by name or description
-function searchCrops() {
-const searchTerm = document.getElementById('search-input').value.toLowerCase();
-
-if (!searchTerm) {
-// If search is empty, reapply current filters
-applyFilters();
-return;
-}
-
-// Filter crops by search term
-filteredCrops = allCrops.filter(crop => {
-return crop.name.toLowerCase().includes(searchTerm) ||
- crop.description.toLowerCase().includes(searchTerm);
-});
-
-// Apply any active sorting
-const sortBy = document.getElementById('sort-select').value;
-sortCrops(sortBy);
-
-// Reset to first page
-currentPage = 1;
-
-// Update results count
-document.getElementById('results-count').textContent = filteredCrops.length;
-
-// Display crops
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-}
-
-// Filter crops by category
-function filterCropsByCategory(category) {
-if (category === 'all') {
-// Apply current filters without category filter
-applyFilters();
-return;
-}
-
-// Apply current filters first
-applyFilters();
-
-// Then filter by category (simulated since we don't have category in our model)
-// In a real app, you would use the actual category field
-// Here we're just simulating by using the crop name
-const categoryMap = {
-'vegetables': ['tomato', 'potato', 'carrot', 'onion', 'cucumber'],
-'fruits': ['apple', 'orange', 'banana', 'grape', 'berry'],
-'grains': ['wheat', 'rice', 'corn', 'barley', 'oat'],
-'herbs': ['basil', 'mint', 'cilantro', 'oregano', 'thyme']
-};
-
-const keywords = categoryMap[category] || [];
-
-filteredCrops = filteredCrops.filter(crop => {
-const cropNameLower = crop.name.toLowerCase();
-return keywords.some(keyword => cropNameLower.includes(keyword));
-});
-
-// Reset to first page
-currentPage = 1;
-
-// Update results count
-document.getElementById('results-count').textContent = filteredCrops.length;
-
-// Display crops
-displayCrops(filteredCrops, currentPage);
-setupPagination(filteredCrops.length);
-}
-
-// View crop details
-function viewCropDetails(cropId) {
-const crop = allCrops.find(c => c._id === cropId);
-
-if (!crop) {
-alert('Crop not found');
-return;
-}
-
-const cropDetailsContent = document.getElementById('crop-details-content');
-
-cropDetailsContent.innerHTML = `
-<div class="row">
-<div class="col-md-5">
-<img src="${crop.cropImage || '../assets/img/default-crop.png'}" class="img-fluid rounded" alt="${crop.name}">
-</div>
-<div class="col-md-7">
-<h3>${crop.name}</h3>
-<p>${crop.description}</p>
-
-<div class="d-flex justify-content-between mb-3">
-<h4 class="text-success">${crop.price.toFixed(2)}/${crop.unit}</h4>
-<span class="badge bg-primary">${crop.quantity} ${crop.unit} available</span>
-</div>
-
-<p><i class="fas fa-map-marker-alt me-1"></i> <strong>Location:</strong> ${crop.location}</p>
-<p><i class="fas fa-calendar-alt me-1"></i> <strong>Harvest Date:</strong> ${new Date(crop.harvestDate).toLocaleDateString()}</p>
-<p><i class="fas fa-user me-1"></i> <strong>Farmer:</strong> ${crop.sellerName}</p>
-
-<div class="mt-4">
-<button class="btn btn-primary" id="modal-order-btn" data-crop-id="${crop._id}">
-  <i class="fas fa-shopping-cart me-2"></i>Place Order
-</button>
-</div>
-</div>
-</div>
-`;
-
-// Show modal
-const modal = new bootstrap.Modal(document.getElementById('cropDetailsModal'));
-modal.show();
-
-// Add event listener for the order button
-document.getElementById('modal-order-btn').addEventListener('click', function() {
-// Hide details modal
-modal.hide();
-
-// Open order modal
-openOrderModal(this.getAttribute('data-crop-id'));
-});
-}
-
-// Open order modal
-function openOrderModal(cropId) {
-// Check if user is logged in
-if (!isAuthenticated()) {
-alert('Please login to place an order');
-window.location.href = 'login.html';
-return;
-}
-
-// Check if user is a customer
-const user = getCurrentUser();
-if (user.role !== 'customer') {
-alert('Only customers can place orders');
-return;
-}
-
-const crop = allCrops.find(c => c._id === cropId);
-
-if (!crop) {
-alert('Crop not found');
-return;
-}
-
-// Fill order form with crop data
-document.getElementById('crop-id').value = crop._id;
-document.getElementById('crop-name-display').value = crop.name;
-document.getElementById('order-quantity').value = 1;
-document.getElementById('order-quantity').max = crop.quantity;
-document.getElementById('quantity-unit').textContent = crop.unit;
-document.getElementById('available-quantity').textContent = crop.quantity;
-document.getElementById('available-unit').textContent = crop.unit;
-document.getElementById('order-price').value = crop.price.toFixed(2);
-document.getElementById('order-total').value = crop.price.toFixed(2);
-
-// Pre-fill address with user's info if available
-if (user.location) {
-document.getElementById('delivery-address').value = user.location;
-}
-
-if (user.phone) {
-document.getElementById('contact-phone').value = user.phone;
-}
-
-// Show order modal
-const modal = new bootstrap.Modal(document.getElementById('orderModal'));
-modal.show();
-}
-
-// Update order total when quantity changes
-function updateOrderTotal() {
-const quantity = parseInt(document.getElementById('order-quantity').value) || 0;
-const price = parseFloat(document.getElementById('order-price').value) || 0;
-
-const total = quantity * price;
-document.getElementById('order-total').value = total.toFixed(2);
-}
-
-// Place order
-async function placeOrder() {
-try {
-// Check if user is logged in
-if (!isAuthenticated()) {
-alert('Please login to place an order');
-window.location.href = 'login.html';
-return;
-}
-
-const token = getToken();
-const cropId = document.getElementById('crop-id').value;
-const quantity = parseInt(document.getElementById('order-quantity').value);
-const deliveryAddress = document.getElementById('delivery-address').value;
-const contactPhone = document.getElementById('contact-phone').value;
-
-// Validate form
-const form = document.getElementById('order-form');
-if (!form.checkValidity()) {
-form.reportValidity();
-return;
-}
-
-// Validate quantity
-const availableQuantity = parseInt(document.getElementById('available-quantity').textContent);
-if (quantity <= 0 || quantity > availableQuantity) {
-alert(`Please enter a quantity between 1 and ${availableQuantity}`);
-return;
-}
-
-// Submit order
-const response = await fetch(`${API_URL}/orders`, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-'Authorization': `Bearer ${token}`
-},
-body: JSON.stringify({
-cropId,
-quantity,
-deliveryAddress,
-contactPhone
-})
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not place order');
-}
-
-// Hide modal
-const modal = bootstrap.Modal.getInstance(document.getElementById('orderModal'));
-modal.hide();
-
-// Show success message
-alert('Order placed successfully!');
-
-// Redirect to customer dashboard
-window.location.href = 'customer-dashboard.html';
-} catch (error) {
-console.error('Place order error:', error);
-const errorElement = document.getElementById('order-error');
-errorElement.textContent = error.message;
-errorElement.classList.remove('d-none');
-}
-}
-</script>
-</body>
-</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Browse Crops | CropConnect</title>
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-<!-- Custom CSS -->
-<link rel="stylesheet" href="../assets/css/style.css">
-<link rel="icon" href="../assets/img/favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Fresh Crops - CropConnect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #28a745;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: #ffffff;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+        }
+        
+        .hero-section {
+            background-color: var(--secondary-color);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding-right: 40px;
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            border: none;
+            background: transparent;
+            color: var(--primary-color);
+        }
+        
+        .filters-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-group h5 {
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .price-range {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .price-range input {
+            width: 100%;
+        }
+        
+        .price-range-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        .category-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background-color: var(--secondary-color);
+            border: none;
+            white-space: nowrap;
+        }
+        
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .crops-count {
+            margin-bottom: 1.5rem;
+            color: #6c757d;
+        }
+        
+        .view-options {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .view-option {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        
+        .view-option.active {
+            color: var(--primary-color);
+        }
+        
+        .filter-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .pagination {
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .page-link {
+            color: var(--primary-color);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem 0;
+            color: #6c757d;
+        }
+        
+        .crop-image {
+            height: 150px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .crop-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(40, 167, 69, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .price-display {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+        
+        .unit-selector {
+            margin-top: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .price-range {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-<div class="container">
-<a class="navbar-brand" href="index.html">
-<i class="fas fa-seedling me-2"></i>CropConnect
-</a>
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarNav">
-<ul class="navbar-nav ms-auto" id="nav-menu">
-<li class="nav-item">
-<a class="nav-link" href="index.html">Home</a>
-</li>
-<li class="nav-item">
-<a class="nav-link active" href="browse-crops.html">Browse Crops</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="about.html">About Us</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="contact.html">Contact</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="login.html">Login</a>
-</li>
-<li class="nav-item">
-<a class="btn btn-outline-light ms-2" href="register.html">Sign Up</a>
-</li>
-</ul>
-</div>
-</div>
-</nav>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">CropConnect</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Browse Crops</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light ms-2" href="#">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<!-- Page Header -->
-<section class="bg-light py-4">
-<div class="container">
-<div class="row align-items-center">
-<div class="col-lg-6">
-<h1 class="fw-bold">Browse Fresh Crops</h1>
-<p class="lead text-muted mb-0">Discover fresh produce directly from local farmers</p>
-</div>
-<div class="col-lg-6">
-<div class="input-group">
-<input type="text" class="form-control" placeholder="Search for crops..." id="search-input">
-<button class="btn btn-primary" type="button" id="search-btn">
-<i class="fas fa-search"></i> Search
-</button>
-</div>
-</div>
-</div>
-</div>
-</section>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="text-center mb-3">Browse Fresh Crops</h1>
+            <p class="text-center mb-4">Discover fresh produce directly from local farmers</p>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="form-control form-control-lg" placeholder="Search for crops..." id="searchInput">
+                    <button id="searchButton">Search</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Main Content -->
-<section class="py-5">
-<div class="container">
-<div class="row">
-<!-- Filters Sidebar -->
-<div class="col-lg-3 mb-4">
-<div class="card border-0 shadow-sm">
-<div class="card-body">
-<h5 class="card-title">Filters</h5>
-<hr>
-
-<!-- Price Range Filter -->
-<div class="mb-4">
-  <h6>Price Range</h6>
-  <div class="d-flex align-items-center">
-    <div class="input-group input-group-sm">
-      <span class="input-group-text">$</span>
-      <input type="number" class="form-control" placeholder="Min" id="price-min">
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <!-- Filters Column -->
+            <div class="col-lg-3">
+                <div class="filters-section">
+                    <h4 class="mb-4">Filters</h4>
+                    
+                    <div class="filter-group">
+                        <h5>Price Range</h5>
+                        <div class="price-range">
+                            <div class="mb-3">
+                                <label for="minPrice" class="form-label">Min ($)</label>
+                                <input type="number" class="form-control" id="minPrice" placeholder="0" min="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="maxPrice" class="form-label">Max ($)</label>
+                                <input type="number" class="form-control" id="maxPrice" placeholder="100" min="0">
+                            </div>
+                        </div>
+                        <div class="price-range-values">
+                            <span id="minPriceValue">$0</span>
+                            <span id="maxPriceValue">$100+</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h5>Location</h5>
+                        <input type="text" class="form-control" id="locationInput" placeholder="Enter location">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <h5>Sort By</h5>
+                        <select class="form-select" id="sortBy">
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="distance">Distance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button class="btn btn-outline-secondary" id="clearFilters">Clear All Filters</button>
+                        <button class="btn btn-success" id="applyFilters">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Crops Listing Column -->
+            <div class="col-lg-9">
+                <div class="category-tabs">
+                    <button class="category-tab active" data-category="all">All Crops</button>
+                    <button class="category-tab" data-category="vegetables">Vegetables</button>
+                    <button class="category-tab" data-category="fruits">Fruits</button>
+                    <button class="category-tab" data-category="grains">Grains</button>
+                    <button class="category-tab" data-category="herbs">Herbs</button>
+                    <button class="category-tab" data-category="other">Other</button>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="crops-count" id="cropsCount">0 crops found</div>
+                    <div class="view-options">
+                        <button class="view-option active" data-view="grid">🟫</button>
+                        <button class="view-option" data-view="list">☰</button>
+                    </div>
+                </div>
+                
+                <div id="cropsResults">
+                    <div class="no-results">
+                        <h4>No crops found matching your criteria</h4>
+                        <p>Try adjusting your filters or search term</p>
+                    </div>
+                </div>
+                
+                <nav aria-label="Page navigation">
+                    <ul class="pagination" id="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
-    <span class="mx-2">-</span>
-    <div class="input-group input-group-sm">
-      <span class="input-group-text">$</span>
-      <input type="number" class="form-control" placeholder="Max" id="price-max">
-    </div>
-  </div>
-</div>
 
-<!-- Location Filter -->
-<div class="mb-4">
-  <h6>Location</h6>
-  <input type="text" class="form-control form-control-sm" placeholder="Enter location" id="location-filter">
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample crop data with images and prices
+        const cropsData = [
+            { 
+                id: 1, 
+                name: "Organic Tomatoes", 
+                category: "vegetables", 
+                price: 45, 
+                pricePer: "kg",
+                location: "Farm A", 
+                distance: "5 miles", 
+                date: "2023-05-15",
+                image: "https://images.unsplash.com/photo-1592841200221-c9cd37b6ee60?w=500&auto=format&fit=crop&q=60",
+                description: "Fresh organic tomatoes grown with natural fertilizers"
+            },
+            { 
+                id: 2, 
+                name: "Fresh Apples", 
+                category: "fruits", 
+                price: 80, 
+                pricePer: "dozen",
+                location: "Farm B", 
+                distance: "8 miles", 
+                date: "2023-05-14",
+                image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=500&auto=format&fit=crop&q=60",
+                description: "Sweet and juicy apples from our orchard"
+            },
+            { 
+                id: 3, 
+                name: "Basmati Rice", 
+                category: "grains", 
+                price: 120, 
+                pricePer: "5kg bag",
+                location: "Farm C", 
+                distance: "12 miles", 
+                date: "2023-05-13",
+                image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&auto=format&fit=crop&q=60",
+                description: "Premium quality basmati rice, aged for perfect texture"
+            },
+            { 
+                id: 4, 
+                name: "Fresh Basil", 
+                category: "herbs", 
+                price: 15, 
+                pricePer: "bunch",
+                location: "Farm D", 
+                distance: "3 miles", 
+                date: "2023-05-16",
+                image: "https://images.unsplash.com/photo-1605210057201-9f4a8a0b9b4d?w=500&auto=format&fit=crop&q=60",
+                description: "Aromatic basil leaves perfect for Italian dishes"
+            },
+            { 
+                id: 5, 
+                name: "Organic Potatoes", 
+                category: "vegetables", 
+                price: 30, 
+                pricePer: "kg",
+                location: "Farm E", 
+                distance: "7 miles", 
+                date: "2023-05-12",
+                image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&auto=format&fit=crop&q=60",
+                description: "Certified organic potatoes, great for roasting"
+            },
+            { 
+                id: 6, 
+                name: "Sweet Mangoes", 
+                category: "fruits", 
+                price: 95, 
+                pricePer: "dozen",
+                location: "Farm F", 
+                distance: "15 miles", 
+                date: "2023-05-11",
+                image: "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=500&auto=format&fit=crop&q=60",
+                description: "Seasonal mangoes at their peak sweetness"
+            },
+            { 
+                id: 7, 
+                name: "Wheat Flour", 
+                category: "grains", 
+                price: 40, 
+                pricePer: "kg",
+                location: "Farm G", 
+                distance: "10 miles", 
+                date: "2023-05-10",
+                image: "https://images.unsplash.com/photo-1603569283847-aa295f0d016a?w=500&auto=format&fit=crop&q=60",
+                description: "Stone-ground whole wheat flour"
+            },
+            { 
+                id: 8, 
+                name: "Mint Leaves", 
+                category: "herbs", 
+                price: 20, 
+                pricePer: "bunch",
+                location: "Farm H", 
+                distance: "4 miles", 
+                date: "2023-05-17",
+                image: "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=500&auto=format&fit=crop&q=60",
+                description: "Fresh mint leaves for teas and cocktails"
+            },
+            { 
+                id: 9, 
+                name: "Carrots", 
+                category: "vegetables", 
+                price: 25, 
+                pricePer: "kg",
+                location: "Farm I", 
+                distance: "6 miles", 
+                date: "2023-05-18",
+                image: "https://images.unsplash.com/photo-1447175008436-054170c2e979?w=500&auto=format&fit=crop&q=60",
+                description: "Sweet and crunchy organic carrots"
+            },
+            { 
+                id: 10, 
+                name: "Bananas", 
+                category: "fruits", 
+                price: 35, 
+                pricePer: "dozen",
+                location: "Farm J", 
+                distance: "9 miles", 
+                date: "2023-05-19",
+                image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500&auto=format&fit=crop&q=60",
+                description: "Ripe and ready-to-eat bananas"
+            }
+        ];
 
-<!-- Sort By -->
-<div class="mb-4">
-  <h6>Sort By</h6>
-  <select class="form-select form-select-sm" id="sort-select">
-    <option value="newest">Newest First</option>
-    <option value="price-low">Price: Low to High</option>
-    <option value="price-high">Price: High to Low</option>
-    <option value="name-asc">Name: A to Z</option>
-    <option value="name-desc">Name: Z to A</option>
-    <option value="quantity-high">Quantity: High to Low</option>
-    <option value="quantity-low">Quantity: Low to High</option>
-   </select>
-</div> 
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const minPrice = document.getElementById('minPrice');
+        const maxPrice = document.getElementById('maxPrice');
+        const minPriceValue = document.getElementById('minPriceValue');
+        const maxPriceValue = document.getElementById('maxPriceValue');
+        const locationInput = document.getElementById('locationInput');
+        const sortBy = document.getElementById('sortBy');
+        const clearFilters = document.getElementById('clearFilters');
+        const applyFilters = document.getElementById('applyFilters');
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const viewOptions = document.querySelectorAll('.view-option');
+        const cropsResults = document.getElementById('cropsResults');
+        const cropsCount = document.getElementById('cropsCount');
+        const pagination = document.getElementById('pagination');
+
+        // Current filters state
+        let currentFilters = {
+            searchTerm: '',
+            minPrice: null,
+            maxPrice: null,
+            location: '',
+            sortBy: 'newest',
+            category: 'all',
+            view: 'grid',
+            currentPage: 1,
+            itemsPerPage: 6
+        };
+
+        // Initialize the page
+        function initPage() {
+            // Set default price values
+            minPriceValue.textContent = $${minPrice.value || 0};
+            maxPriceValue.textContent = $${maxPrice.value || 100}+;
+            
+            renderCrops();
+            setupEventListeners();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search functionality
+            searchButton.addEventListener('click', () => {
+                currentFilters.searchTerm = searchInput.value.trim();
+                currentFilters.currentPage = 1;
+                renderCrops();
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    currentFilters.searchTerm = searchInput.value.trim();
+                    currentFilters.currentPage = 1;
+                    renderCrops();
+                }
+            });
+
+            // Price range updates
+            minPrice.addEventListener('input', () => {
+                minPriceValue.textContent = $${minPrice.value || 0};
+            });
+            
+            maxPrice.addEventListener('input', () => {
+                maxPriceValue.textContent = $${maxPrice.value || 100}+;
+            });
+
+            // Filter buttons
+            applyFilters.addEventListener('click', () => {
+                currentFilters.minPrice = minPrice.value ? parseInt(minPrice.value) : null;
+                currentFilters.maxPrice = maxPrice.value ? parseInt(maxPrice.value) : null;
+                currentFilters.location = locationInput.value.trim();
+                currentFilters.sortBy = sortBy.value;
+                currentFilters.currentPage = 1;
+                renderCrops();
+            });
+
+            clearFilters.addEventListener('click', () => {
+                // Reset all filters
+                searchInput.value = '';
+                minPrice.value = '';
+                maxPrice.value = '100';
+                locationInput.value = '';
+                sortBy.value = 'newest';
+                
+                // Reset price display
+                minPriceValue.textContent = '$0';
+                maxPriceValue.textContent = '$100+';
+                
+                currentFilters = {
+                    searchTerm: '',
+                    minPrice: null,
+                    maxPrice: null,
+                    location: '',
+                    sortBy: 'newest',
+                    category: 'all',
+                    view: 'grid',
+                    currentPage: 1,
+                    itemsPerPage: 6
+                };
+                
+                // Reset active category tab
+                categoryTabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.category === 'all') {
+                        tab.classList.add('active');
+                    }
+                });
+                
+                // Reset view option
+                viewOptions.forEach(option => {
+                    option.classList.remove('active');
+                    if (option.dataset.view === 'grid') {
+                        option.classList.add('active');
+                    }
+                });
+                
+                renderCrops();
+            });
+
+            // Category tabs
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilters.category = tab.dataset.category;
+                    currentFilters.currentPage = 1;
+                    renderCrops();
+                });
+            });
+
+            // View options
+            viewOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    viewOptions.forEach(o => o.classList.remove('active'));
+                    option.classList.add('active');
+                    currentFilters.view = option.dataset.view;
+                    renderCrops();
+                });
+            });
+
+            // Pagination
+            pagination.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (e.target.classList.contains('page-link')) {
+                    const text = e.target.textContent.trim();
+                    if (text === 'Previous' && currentFilters.currentPage > 1) {
+                        currentFilters.currentPage--;
+                        renderCrops();
+                    } else if (text === 'Next') {
+                        const filteredCrops = getFilteredCrops();
+                        const totalPages = Math.ceil(filteredCrops.length / currentFilters.itemsPerPage);
+                        if (currentFilters.currentPage < totalPages) {
+                            currentFilters.currentPage++;
+                            renderCrops();
+                        }
+                    } else if (!isNaN(text)) {
+                        currentFilters.currentPage = parseInt(text);
+                        renderCrops();
+                    }
+                }
+            });
+        }
+
+        // Filter and sort crops based on current filters
+        function getFilteredCrops() {
+            let filtered = [...cropsData];
+
+            // Apply search filter
+            if (currentFilters.searchTerm) {
+                const term = currentFilters.searchTerm.toLowerCase();
+                filtered = filtered.filter(crop => 
+                    crop.name.toLowerCase().includes(term) || 
+                    crop.category.toLowerCase().includes(term) ||
+                    crop.description.toLowerCase().includes(term)
+                );
+            }
+
+            // Apply category filter
+            if (currentFilters.category !== 'all') {
+                filtered = filtered.filter(crop => crop.category === currentFilters.category);
+            }
+
+            // Apply price filter
+            if (currentFilters.minPrice !== null) {
+                filtered = filtered.filter(crop => crop.price >= currentFilters.minPrice);
+            }
+            if (currentFilters.maxPrice !== null) {
+                filtered = filtered.filter(crop => crop.price <= currentFilters.maxPrice);
+            }
+
+            // Apply location filter
+            if (currentFilters.location) {
+                const location = currentFilters.location.toLowerCase();
+                filtered = filtered.filter(crop => crop.location.toLowerCase().includes(location));
+            }
+
+            // Apply sorting
+            switch (currentFilters.sortBy) {
+                case 'price-low':
+                    filtered.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    filtered.sort((a, b) => b.price - a.price);
+                    break;
+                case 'distance':
+                    filtered.sort((a, b) => parseInt(a.distance) - parseInt(b.distance));
+                    break;
+                case 'newest':
+                default:
+                    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    break;
+            }
+
+            return filtered;
+        }
+
+        // Render crops based on current filters
+        function renderCrops() {
+            const filteredCrops = getFilteredCrops();
+            const totalCrops = filteredCrops.length;
+            
+            // Update crops count
+            cropsCount.textContent = ${totalCrops} ${totalCrops === 1 ? 'crop' : 'crops'} found;
+            
+            // Pagination
+            const startIndex = (currentFilters.currentPage - 1) * currentFilters.itemsPerPage;
+            const paginatedCrops = filteredCrops.slice(startIndex, startIndex + currentFilters.itemsPerPage);
+            
+            // Clear previous results
+            cropsResults.innerHTML = '';
+            
+            if (paginatedCrops.length === 0) {
+                cropsResults.innerHTML = `
+                    <div class="no-results">
+                        <h4>No crops found matching your criteria</h4>
+                        <p>Try adjusting your filters or search term</p>
+                    </div>
+                `;
+                updatePagination(totalCrops);
+                return;
+            }
+            
+            // Render crops based on current view
+            if (currentFilters.view === 'grid') {
+                renderGridView(paginatedCrops);
+            } else {
+                renderListView(paginatedCrops);
+            }
+            
+            // Update pagination
+            updatePagination(totalCrops);
+        }
+
+        // Render crops in grid view
+        function renderGridView(crops) {
+            const grid = document.createElement('div');
+            grid.className = 'row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4';
+            
+            crops.forEach(crop => {
+                const col = document.createElement('div');
+                col.className = 'col';
+                
+                col.innerHTML = `
+                    <div class="card h-100">
+                        <div class="position-relative">
+                            <img src="${crop.image}" alt="${crop.name}" class="crop-image">
+                            <span class="crop-badge">$${crop.price}/${crop.pricePer}</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${crop.name}</h5>
+                            <div class="price-display">$${crop.price} per ${crop.pricePer}</div>
+                            <p class="card-text"><small class="text-muted">${crop.location} (${crop.distance} away)</small></p>
+                            <p class="card-text">${crop.description}</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <button class="btn btn-outline-success w-100">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(col);
+            });
+            
+            cropsResults.appendChild(grid);
+        }
+
+        // Render crops in list view
+        function renderListView(crops) {
+            const list = document.createElement('div');
+            list.className = 'list-group';
+            
+            crops.forEach(crop => {
+                const item = document.createElement('div');
+                item.className = 'list-group-item list-group-item-action';
+                
+                item.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <img src="${crop.image}" alt="${crop.name}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; margin-right: 15px;">
+                        <div class="flex-grow-1">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">${crop.name}</h5>
+                                <span class="text-success">$${crop.price}/${crop.pricePer}</span>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between">
+                                <small class="text-muted">${crop.category.charAt(0).toUpperCase() + crop.category.slice(1)} • ${crop.location}</small>
+                                <small class="text-muted">${crop.distance} away</small>
+                            </div>
+                            <p class="mb-1">${crop.description}</p>
+                            <button class="btn btn-outline-success btn-sm mt-2">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                
+                list.appendChild(item);
+            });
+            
+            cropsResults.appendChild(list);
+        }
+
+        // Update pagination controls
+        function updatePagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / currentFilters.itemsPerPage);
+            
+            // Clear existing pagination
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            // Previous button
+            const prevItem = document.createElement('li');
+            prevItem.className = page-item ${currentFilters.currentPage === 1 ? 'disabled' : ''};
+            prevItem.innerHTML = <a class="page-link" href="#">Previous</a>;
+            pagination.appendChild(prevItem);
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentFilters.currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            if (startPage > 1) {
+                const firstItem = document.createElement('li');
+                firstItem.className = 'page-item';
+                firstItem.innerHTML = <a class="page-link" href="#">1</a>;
+                pagination.appendChild(firstItem);
+                
+                if (startPage > 2) {
+                    const ellipsisItem = document.createElement('li');
+                    ellipsisItem.className = 'page-item disabled';
+                    ellipsisItem.innerHTML = <span class="page-link">...</span>;
+                    pagination.appendChild(ellipsisItem);
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = page-item ${i === currentFilters.currentPage ? 'active' : ''};
+                pageItem.innerHTML = <a class="page-link" href="#">${i}</a>;
+                pagination.appendChild(pageItem);
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsisItem = document.createElement('li');
+                    ellipsisItem.className = 'page-item disabled';
+                    ellipsisItem.innerHTML = <span class="page-link">...</span>;
+                    pagination.appendChild(ellipsisItem);
+                }
+                
+                const lastItem = document.createElement('li');
+                lastItem.className = 'page-item';
+                lastItem.innerHTML = <a class="page-link" href="#">${totalPages}</a>;
+                pagination.appendChild(lastItem);
+            }
+            
+            // Next button
+            const nextItem = document.createElement('li');
+            nextItem.className = page-item ${currentFilters.currentPage === totalPages ? 'disabled' : ''};
+            nextItem.innerHTML = <a class="page-link" href="#">Next</a>;
+            pagination.appendChild(nextItem);
+        }
+
+        // Initialize the page
+        initPage();
+    </script>
+</body>
+</html>

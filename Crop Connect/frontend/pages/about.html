@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About CropConnect</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
+  <!-- Font Awesome for Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #efedf0;
+    }
+    .hero {
+      background: url('../assets/images/bar.jpg') center/cover no-repeat;
+      color: rgb(255, 255, 255);
+      padding: 100px 0;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+    .section-title {
+      margin-top: 60px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .feature-icon {
+      font-size: 2rem;
+      color: #28a745;
+    }
+    .feature-box {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      height: 100%;
+    }
+    .footer {
+      background-color: #343a40;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 60px;
+    }
+    .img-fluid {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          <i class="fas fa-seedling me-2"></i>CropConnect
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="browse-crops.html">Browse Crops</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="login.html">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-light ms-2" href="register.html">Sign Up</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>About CropConnect</h1>
+      <p >Empowering Farmers. Connecting Consumers.</p>
+    </div>
+  </section>
+
+  <!-- Problem Statement -->
+  <section class="container">
+    <div class="section-title">
+      <h2>Challenges in Indian Agriculture</h2>
+    </div>
+    <div class="row text-center">
+      <div class="col-md-4">
+        <i class="fas fa-user-slash feature-icon"></i>
+        <h5>Middlemen Exploitation</h5>
+        <p>Farmers' incomes reduced by up to 60% due to intermediaries.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-road-block feature-icon"></i>
+        <h5>Limited Market Access</h5>
+        <p>Small and marginal farmers lack direct access to markets.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-chart-line feature-icon"></i>
+        <h5>Inflated Consumer Prices</h5>
+        <p>Consumers face higher prices due to supply chain inefficiencies.</p>
+      </div>
+    </div>
+    <div class="row text-center mt-4">
+      <div class="col-md-4">
+        <i class="fas fa-exchange-alt feature-icon"></i>
+        <h5>Lack of Transparent Crop Exchange</h5>
+        <p>Opaque systems hinder fair trade between farmers and buyers.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-warehouse feature-icon"></i>
+        <h5>Post-Harvest Loss</h5>
+        <p>Significant produce wasted due to inefficient supply chains.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Overview -->
+  <section class="container">
+    <div class="section-title">
+      <h2>Our Solution</h2>
+      <p>CropConnect is a web-based platform connecting farmers directly with buyers, eliminating intermediaries.</p>
+    </div>
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <img src="../assets/images/image.jpg" alt="Farmers Market" class="img-fluid rounded">
+      </div>
+      <div class="col-md-6">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Farmer Empowerment:</strong> Farmers can list produce, set prices, and negotiate directly with buyers.</li>
+          <li class="list-group-item"><strong>Buyer Access:</strong> Buyers browse a variety of crops with transparent pricing and real-time availability.</li>
+          <li class="list-group-item"><strong>Transparent Transactions:</strong> Direct interactions ensure fair trade and build trust.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="container">
+    <div class="section-title">
+      <h2>Platform Features</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-seedling feature-icon"></i>
+          <h5>Farmer Crop Listing</h5>
+          <p>Farmers can log in and list their crops with name, quantity, price, and photos.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-shopping-cart feature-icon"></i>
+          <h5>Buyer Crop Marketplace</h5>
+          <p>Buyers can browse, filter, and search for crops by category, location, or price.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-user-lock feature-icon"></i>
+          <h5>Role-Based Login System</h5>
+          <p>Separate dashboards and access control for Farmers and Buyers using secure authentication (JWT).</p>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-star feature-icon"></i>
+          <h5>Trust Score System</h5>
+          <p>After each transaction, buyers rate sellers, building a trust-based marketplace and highlighting top-rated farmers.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-history feature-icon"></i>
+          <h5>Order Placement & History</h5>
+          <p>Buyers can place orders, and both parties can view current and past orders in their dashboard.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-mobile-alt feature-icon"></i>
+          <h5>Mobile-Responsive UI</h5>
+          <p>Clean and responsive design using Bootstrap, ensuring accessibility across devices.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI & ML Integrations -->
+  <section class="container">
+    <div class="section-title">
+      <h2>AI & ML Integrations</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-chart-line feature-icon"></i>
+          <h5>Predictive Crop Price Forecasting</h5>
+          <p>Utilizes LSTM models to predict future crop prices based on historical data, weather patterns, and market trends.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-camera feature-icon"></i>
+          <h5>AI-Powered Crop Quality Assessment</h5>
+          <p>Employs CNNs to automatically classify and grade crops based on quality through image analysis.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-shield-alt feature-icon"></i>
+          <h5>Fraud Prevention</h5>
+          <p>Utilizes anomaly detection models to identify suspicious activities like price manipulation or fraudulent transactions.</p>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-user-check feature-icon"></i>
+          <h5>Personalized Recommendations</h5>
+          <p>Implements recommendation systems to suggest relevant crops to buyers and offer farming tips to sellers.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-thumbs-up feature-icon"></i>
+          <h5>Seller Trust Validation Score</h5>
+          <p>Calculates trust scores for sellers based on the amount of product sold and buyer ratings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <h5 class="text-uppercase mb-4">CropConnect</h5>
+          <p>Fresh crops, direct from farms to families.</p>
+          <div class="d-flex">
+            <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Links</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="index.html">Home</a></li>
+            <li class="mb-2"><a href="browse-crops.html">Browse Crops</a></li>
+            <li class="mb-2"><a href="about.html">About Us</a></li>
+            <li class="mb-2"><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Farmers</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="login.html">Login</a></li>
+            <li class="mb-2"><a href="register.html?role=seller">Register</a></li>
+            <li class="mb-2"><a href="#">How to Sell</a></li>
+            <li class="mb-2"><a href="#">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <h5 class="text-uppercase mb-4">Contact Us</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Farm Road, Cropville, CA 98765</li>
+            <li class="mb-2"><i class="fas fa-phone me-2"></i>(123) 456-7890</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@cropconnect.com</li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4 bg-light">
+      <div class="text-center">
+        <p class="mb-0">&copy; 2025 CropConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>

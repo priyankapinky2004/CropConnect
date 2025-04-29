@@ -4,6 +4,691 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Dashboard | CropConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --primary-color: #2e7d32;
+      --primary-light: #60ad5e;
+      --primary-dark: #005005;
+      --secondary-color: #ff8f00;
+      --secondary-light: #ffc046;
+      --secondary-dark: #c56000;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+      --text-muted: #757575;
+      --bg-light: #f5f5f5;
+      --bg-white: #ffffff;
+      --bg-card: #ffffff;
+      --border-color: #e0e0e0;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --danger-color: #f44336;
+      --success-color: #4caf50;
+      --warning-color: #ff9800;
+      --info-color: #2196f3;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #fff);
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+    
+    /* Header Styles */
+    .header {
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      padding: 0.8rem 2rem;
+      box-shadow: 0 2px 10px var(--shadow-color);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--text-light);
+    }
+    
+    .logo i {
+      margin-right: 10px;
+      font-size: 1.8rem;
+    }
+    
+    .search-bar {
+      flex: 1;
+      max-width: 500px;
+      margin: 0 20px;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px 40px 10px 15px;
+      border: none;
+      border-radius: 25px;
+      font-size: 0.95rem;
+    }
+    
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .cart-icon {
+      position: relative;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--secondary-color);
+      color: var(--text-light);
+      font-size: 0.7rem;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: var(--primary-light);
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 10px;
+    }
+    
+    .username {
+      font-weight: 500;
+      max-width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .dropdown-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: var(--bg-white);
+      border-radius: 8px;
+      box-shadow: 0 5px 15px var(--shadow-color);
+      min-width: 200px;
+      padding: 10px 0;
+      display: none;
+      z-index: 1001;
+    }
+    
+    .dropdown-menu.show {
+      display: block;
+    }
+    
+    .dropdown-item {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      color: var(--text-dark);
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    
+    .dropdown-item:hover {
+      background-color: var(--bg-light);
+    }
+    
+    .dropdown-item i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+      color: var(--primary-color);
+    }
+    
+    .dropdown-divider {
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 5px 0;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1400px;
+      margin: 80px auto 30px;
+      padding: 0 20px;
+    }
+    
+    /* Categories Section */
+    .categories {
+      margin-bottom: 30px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 10px;
+      scrollbar-width: thin;
+    }
+    
+    .categories::-webkit-scrollbar {
+      height: 5px;
+    }
+    
+    .categories::-webkit-scrollbar-track {
+      background: var(--bg-light);
+    }
+    
+    .categories::-webkit-scrollbar-thumb {
+      background-color: var(--primary-light);
+      border-radius: 10px;
+    }
+    
+    .category {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 15px;
+      background-color: var(--bg-white);
+      border-radius: 20px;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 5px var(--shadow-color);
+    }
+    
+    .category i {
+      margin-right: 8px;
+    }
+    
+    .category.active {
+      background-color: var(--primary-color);
+      color: var(--text-light);
+    }
+    
+    /* Products Section */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--primary-dark);
+    }
+    
+    .view-all {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+    
+    .view-all i {
+      margin-left: 5px;
+    }
+    
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    
+    .product-card {
+      background-color: var(--bg-white);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px var(--shadow-color);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px var(--shadow-color);
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    
+    .product-details {
+      padding: 15px;
+    }
+    
+    .product-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+    }
+    
+    .product-price {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .product-seller {
+      display: flex;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+    
+    .product-seller i {
+      margin-right: 5px;
+    }
+    
+    .product-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .stars {
+      display: flex;
+      color: #ffc107;
+      margin-right: 5px;
+    }
+    
+    .rating-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .add-to-cart-btn {
+      width: 100%;
+      padding: 10px 0;
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.3s;
+    }
+    
+    .add-to-cart-btn:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .add-to-cart-btn i {
+      margin-right: 8px;
+    }
+    
+    /* Loading Spinner */
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(46, 125, 50, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+    }
+    
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: var(--border-color);
+    }
+    
+    .empty-state-text {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+    
+    /* Cart Slide-in */
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 380px;
+      height: 100vh;
+      background-color: var(--bg-white);
+      box-shadow: -5px 0 15px var(--shadow-color);
+      z-index: 1002;
+      transition: right 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .cart-sidebar.open {
+      right: 0;
+    }
+    
+    .cart-header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .cart-title {
+      font-size: 1.3rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+    
+    .cart-title i {
+      margin-right: 10px;
+    }
+    
+    .close-cart {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    
+    .cart-empty {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+    }
+    
+    .cart-empty i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: var(--border-color);
+    }
+    
+    .cart-item {
+      display: flex;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .cart-item-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 15px;
+    }
+    
+    .cart-item-details {
+      flex: 1;
+    }
+    
+    .cart-item-name {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .cart-item-price {
+      color: var(--primary-color);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    
+    .cart-item-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .quantity-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-light);
+      border: none;
+      cursor: pointer;
+    }
+    
+    .quantity-input {
+      width: 40px;
+      height: 30px;
+      text-align: center;
+      border: none;
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      -moz-appearance: textfield;
+    }
+    
+    .quantity-input::-webkit-outer-spin-button,
+    .quantity-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    .remove-item {
+      color: var(--danger-color);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .remove-item i {
+      margin-right: 5px;
+    }
+    
+    .cart-footer {
+      padding: 20px;
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-light);
+    }
+    
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    
+    .checkout-btn {
+      width: 100%;
+      padding: 12px 0;
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.3s;
+    }
+    
+    .checkout-btn:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+      display: none;
+    }
+    
+    .overlay.show {
+      display: block;
+    }
+    
+    /* Alert Messages */
+    .alert {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 5px;
+      box-shadow: 0 3px 10px var(--shadow-color);
+      display: flex;
+      align-items: center;
+      z-index: 1003;
+      transform: translateX(120%);
+      transition: transform 0.3s;
+    }
+    
+    .alert.show {
+      transform: translateX(0);
+    }
+    
+    .alert-success {
+      background-color: var(--success-color);
+      color: var(--text-light);
+    }
+    
+    .alert-error {
+      background-color: var(--danger-color);
+      color: var(--text-light);
+    }
+    
+    .alert i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 991px) {
+      .search-bar {
+        max-width: 300px;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header {
+        padding: 0.8rem 1rem;
+      }
+      
+      .header-content {
+        flex-wrap: wrap;
+      }
+      
+      .search-bar {
+        order: 3;
+        margin: 10px 0 0;
+        max-width: 100%;
+        width: 100%;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+      
+      .cart-sidebar {
+        width: 320px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .username {
+        display: none;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+      }
+      
+      .cart-sidebar {
+        width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
@@ -12,7 +697,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="icon" href="../assets/img/favicon.ico">
+  <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
 </head>
 <body>
   <!-- Navigation -->
@@ -27,511 +712,563 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link active" href="index.html">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="browse-crops.html">Browse Crops</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="customer-dashboard.html">My Dashboard</a>
+            <a class="nav-link" href="about.html">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="profile.html">My Profile</a>
+            <a class="nav-link" href="contact.html">Contact</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" id="logout">Logout</a>
+            <a class="nav-link" href="profile.html">Profile</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-
-  <!-- Dashboard Header -->
-  <section class="bg-light py-4">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-8">
-          <h1 class="fw-bold mb-0">Customer Dashboard</h1>
-          <p class="text-muted mb-0">Welcome back, <span id="customer-name">Customer</span>!</p>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="#" class="logo">
+        <i class="fas fa-seedling"></i>
+        <span>CropConnect</span>
+      </a>
+      
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search for fresh produce...">
+        <i class="fas fa-search search-icon"></i>
+      </div>
+      
+      <div class="user-actions">
+        <div class="cart-icon" id="open-cart">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cart-count">0</span>
         </div>
-        <div class="col-md-4 text-md-end">
-          <a href="browse-crops.html" class="btn btn-primary">
-            <i class="fas fa-shopping-basket me-2"></i>Browse Crops
-          </a>
+        
+        <div class="user-profile" id="toggle-dropdown">
+          <div class="avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <span class="username" id="user-name">Customer</span>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Dashboard Content -->
-  <section class="py-5">
-    <div class="container">
-      <!-- Stats Row -->
-      <div class="row mb-4">
-        <div class="col-md-4 mb-4 mb-md-0">
-          <div class="card dashboard-card h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-3">
-                <div class="bg-light-success rounded-circle p-3 me-3">
-                  <i class="fas fa-shopping-cart fa-2x text-success"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-1">Total Orders</h6>
-                  <h4 class="fw-bold mb-0" id="total-orders-count">0</h4>
-                </div>
-              </div>
-              <p class="text-muted small">All your orders placed till date</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-4 mb-md-0">
-          <div class="card dashboard-card h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-3">
-                <div class="bg-light-warning rounded-circle p-3 me-3">
-                  <i class="fas fa-truck fa-2x text-warning"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-1">Pending Delivery</h6>
-                  <h4 class="fw-bold mb-0" id="pending-delivery-count">0</h4>
-                </div>
-              </div>
-              <p class="text-muted small">Orders on the way to you</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card dashboard-card h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-3">
-                <div class="bg-light-info rounded-circle p-3 me-3">
-                  <i class="fas fa-dollar-sign fa-2x text-info"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-1">Total Spent</h6>
-                  <h4 class="fw-bold mb-0" id="total-spent">$0.00</h4>
-                </div>
-              </div>
-              <p class="text-muted small">Amount spent on all orders</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <ul class="nav nav-tabs mb-4" id="dashboardTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="true">
-            <i class="fas fa-shopping-cart me-2"></i>My Orders
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites" type="button" role="tab" aria-controls="favorites" aria-selected="false">
-            <i class="fas fa-heart me-2"></i>Favorites
-          </button>
-        </li>
-      </ul>
-
-      <!-- Tab Content -->
-      <div class="tab-content" id="dashboardTabContent">
-        <!-- My Orders Tab -->
-        <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-          <!-- Filter Orders -->
-          <div class="mb-4">
-            <select class="form-select" id="filter-orders">
-              <option value="all">All Orders</option>
-              <option value="pending">Pending</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
-
-          <!-- Orders Table -->
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead class="table-light">
-                <tr>
-                  <th>Order ID</th>
-                  <th>Crop</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th>Farmer</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="orders-table-body">
-                <!-- Orders will be loaded here dynamically -->
-                <tr>
-                  <td colspan="8" class="text-center py-4">
-                    <div class="spinner-border text-primary" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Favorites Tab -->
-        <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
-          <div class="row" id="favorites-list">
-            <!-- This would be populated with favorites functionality -->
-            <div class="col-12 text-center py-5">
-              <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i>Favorites feature coming soon!
-              </div>
-              <a href="browse-crops.html" class="btn btn-primary mt-3">
-                <i class="fas fa-shopping-basket me-2"></i>Browse Crops Now
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Order Details Modal -->
-  <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="order-details-content">
-          <!-- Order details will be loaded here dynamically -->
-          <div class="text-center py-3">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-danger d-none" id="cancel-order-btn">Cancel Order</button>
-        </div>
-      </div>
-    </div>
+  </header>
+  
+  <!-- User Dropdown Menu -->
+  <div class="dropdown-menu" id="dropdown-menu">
+    <a href="#" class="dropdown-item">
+      <i class="fas fa-user-circle"></i>
+      <span>My Profile</span>
+    </a>
+    <a href="#" class="dropdown-item">
+      <i class="fas fa-shopping-bag"></i>
+      <span>My Orders</span>
+    </a>
+    <a href="#" class="dropdown-item">
+      <i class="fas fa-heart"></i>
+      <span>Wishlist</span>
+    </a>
+    <div class="dropdown-divider"></div>
+    <a href="#" class="dropdown-item" id="logout-btn">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </a>
   </div>
   
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Custom JS -->
-  <script src="../assets/js/auth.js"></script>
-  <script src="../assets/js/orders.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Protect route - Redirect if not authenticated or not a customer
-      if (!protectRoute() || !checkRole(['customer'])) {
-        return;
-      }
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Categories -->
+    <div class="categories">
+      <div class="category active" data-category="all">
+        <i class="fas fa-border-all"></i>
+        All Products
+      </div>
+      <div class="category" data-category="Vegetables">
+        <i class="fas fa-carrot"></i>
+        Vegetables
+      </div>
+      <div class="category" data-category="Fruits">
+        <i class="fas fa-apple-alt"></i>
+        Fruits
+      </div>
+      <div class="category" data-category="Leafy Greens">
+        <i class="fas fa-leaf"></i>
+        Leafy Greens
+      </div>
+      <div class="category" data-category="Herbs">
+        <i class="fas fa-seedling"></i>
+        Herbs
+      </div>
+      <div class="category" data-category="Organic">
+        <i class="fas fa-seedling"></i>
+        Organic
+      </div>
+      <div class="category" data-category="Dairy">
+        <i class="fas fa-cheese"></i>
+        Dairy
+      </div>
+    </div>
+    
+    <!-- Products Section -->
+    <div class="section-header">
+      <h2 class="section-title" id="products-title">All Products</h2>
+    </div>
+    
+    <!-- Products Container -->
+    <div id="products-container">
+      <div class="spinner-container" id="loading-spinner">
+        <div class="spinner"></div>
+      </div>
       
-      // Set welcome message with customer name
-      const user = getCurrentUser();
-      document.getElementById('customer-name').textContent = user.name;
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <i class="fas fa-search"></i>
+        <h3 class="empty-state-text">No products found</h3>
+        <p>Try searching for something else or check back later.</p>
+      </div>
       
-      // Load customer's orders
-      loadCustomerOrders();
-      
-      // Add event listeners for filter dropdown
-      document.getElementById('filter-orders').addEventListener('change', function() {
-        filterOrders(this.value);
-      });
-      
-      // Logout functionality
-      document.getElementById('logout').addEventListener('click', function(e) {
-        e.preventDefault();
-        logout();
+      <div class="products-grid" id="products-grid">
+        <!-- Products will be loaded dynamically -->
+      </div>
+    </div>
+  </main>
+  
+  <!-- Cart Sidebar -->
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">
+      <h3 class="cart-title">
+        <i class="fas fa-shopping-cart"></i>
+        Your Cart (<span id="cart-items-count">0</span>)
+      </h3>
+      <button class="close-cart" id="close-cart">&times;</button>
+    </div>
+    
+    <div class="cart-items" id="cart-items">
+      <div class="cart-empty" id="cart-empty">
+        <i class="fas fa-shopping-cart"></i>
+        <p>Your cart is empty</p>
+        <p>Add items to get started</p>
+      </div>
+      <!-- Cart items will be loaded dynamically -->
+    </div>
+    
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cart-total">₹0.00</span>
+      </div>
+      <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <h5 class="text-uppercase mb-4">CropConnect</h5>
+          <p>Fresh crops, direct from farms to families.</p>
+          <div class="d-flex">
+            <a href="" class="me-3"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/Cropconnec23918" class="me-3"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/cropconnectfarmer/" class="me-3"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/feed/"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Links</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="index.html">Home</a></li>
+            <li class="mb-2"><a href="browse-crops.html">Browse Crops</a></li>
+            <li class="mb-2"><a href="about.html">About Us</a></li>
+            <li class="mb-2"><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Farmers</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="login.html">Login</a></li>
+            <li class="mb-2"><a href="register.html?role=seller">Register</a></li>
+            <li class="mb-2"><a href="seller-dashboard.html">How to Sell</a></li>
+            <li class="mb-2"><a href="browse-crops.html">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <h5 class="text-uppercase mb-4">Contact Us</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Malnad College Of Engineering, Hassan</li>
+            <li class="mb-2"><i class="fas fa-phone me-2"></i>6361922126</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i>cropconnectfarmer@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4 bg-light">
+      <div class="text-center">
+        <p class="mb-0">&copy; 2025 CropConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  <!-- Alert Message -->
+  <div class="alert" id="alert">
+    <i class="fas fa-check-circle"></i>
+    <span id="alert-message"></span>
+  </div>
+  
+  <!-- Firebase Scripts -->
+  <script type="module">
+    import {
+      getUserFromStorage,
+      checkAuth,
+      logout,
+      getAllProducts,
+      addToCart,
+      updateCartItemQuantity,
+      removeFromCart,
+      listenToCartUpdates
+    } from '../assets/js/firebase-config.js';
+    
+    // Check if user is authorized to access this page
+    const user = checkAuth(['customer']);
+    if (!user) {
+      document.body.innerHTML = '<div style="text-align:center; padding:50px;">You do not have access to this page.</div>';
+      throw new Error('Unauthorized access');
+    }
+    
+    // DOM Elements
+    const userName = document.getElementById('user-name');
+    const productGrid = document.getElementById('products-grid');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const emptyState = document.getElementById('empty-state');
+    const productsTitle = document.getElementById('products-title');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartItems = document.getElementById('cart-items');
+    const cartEmpty = document.getElementById('cart-empty');
+    const cartCount = document.getElementById('cart-count');
+    const cartItemsCount = document.getElementById('cart-items-count');
+    const cartTotal = document.getElementById('cart-total');
+    const overlay = document.getElementById('overlay');
+    const alert = document.getElementById('alert');
+    const alertMessage = document.getElementById('alert-message');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    
+    // Set user name
+    userName.textContent = user.name || 'Customer';
+    
+    // Event Listeners
+    document.getElementById('toggle-dropdown').addEventListener('click', toggleDropdown);
+    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    document.getElementById('open-cart').addEventListener('click', openCart);
+    document.getElementById('close-cart').addEventListener('click', closeCart);
+    document.getElementById('overlay').addEventListener('click', closeCart);
+    document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
+    
+    // Add event listeners for categories
+    const categories = document.querySelectorAll('.category');
+    categories.forEach(category => {
+      category.addEventListener('click', () => {
+        // Remove active class from all categories
+        categories.forEach(c => c.classList.remove('active'));
+        // Add active class to clicked category
+        category.classList.add('active');
+        // Filter products by category
+        const selectedCategory = category.dataset.category;
+        filterProducts(selectedCategory);
       });
     });
     
-    // Load customer's orders
-    async function loadCustomerOrders() {
+    // Load products on page load
+    loadProducts();
+    
+    // Start listening for cart updates
+    let cartUnsubscribe = listenToCartUpdates(updateCartUI);
+    
+    // Functions
+    async function loadProducts() {
       try {
-        const token = getToken();
+        showLoading();
         
-        const response = await fetch(`${API_URL}/orders/customer`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        // Get all products
+        const products = await getAllProducts();
         
-        const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.message || 'Could not fetch orders');
-        }
-        
-        const orders = data.data;
-        
-        // Update order stats
-        document.getElementById('total-orders-count').textContent = orders.length;
-        
-        const pendingDelivery = orders.filter(order => 
-          ['confirmed', 'shipped'].includes(order.status)
-        ).length;
-        document.getElementById('pending-delivery-count').textContent = pendingDelivery;
-        
-        const totalSpent = orders.reduce((sum, order) => {
-          // Only count completed orders
-          if (order.status === 'delivered') {
-            return sum + order.totalPrice;
-          }
-          return sum;
-        }, 0);
-        document.getElementById('total-spent').textContent = `$${totalSpent.toFixed(2)}`;
-        
-        // Display orders
-        const ordersTableBody = document.getElementById('orders-table-body');
-        
-        if (orders.length === 0) {
-          ordersTableBody.innerHTML = `
-            <tr>
-              <td colspan="8" class="text-center py-4">
-                <div class="alert alert-info">
-                  <i class="fas fa-info-circle me-2"></i>You haven't placed any orders yet.
-                </div>
-                <a href="browse-crops.html" class="btn btn-primary mt-3">
-                  <i class="fas fa-shopping-basket me-2"></i>Browse Crops Now
-                </a>
-              </td>
-            </tr>
-          `;
+        // Check if there are products
+        if (products.length === 0) {
+          showEmptyState();
         } else {
-          ordersTableBody.innerHTML = '';
-          orders.forEach(order => {
-            const orderDate = new Date(order.createdAt).toLocaleDateString();
-            let statusBadgeClass = '';
-            
-            switch (order.status) {
-              case 'pending':
-                statusBadgeClass = 'bg-warning';
-                break;
-              case 'confirmed':
-                statusBadgeClass = 'bg-primary';
-                break;
-              case 'shipped':
-                statusBadgeClass = 'bg-info';
-                break;
-              case 'delivered':
-                statusBadgeClass = 'bg-success';
-                break;
-              case 'cancelled':
-                statusBadgeClass = 'bg-danger';
-                break;
-            }
-            
-            ordersTableBody.innerHTML += `
-              <tr data-order-id="${order._id}" data-order-status="${order.status}">
-                <td>${order._id.substring(0, 8)}...</td>
-                <td>${order.cropName}</td>
-                <td>${order.quantity} ${order.unit}</td>
-                <td>$${order.totalPrice.toFixed(2)}</td>
-                <td>${order.sellerName}</td>
-                <td><span class="badge ${statusBadgeClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
-                <td>${orderDate}</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary view-order-btn" data-order-id="${order._id}">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                  ${order.status === 'pending' ? `
-                    <button class="btn btn-sm btn-outline-danger cancel-btn" data-order-id="${order._id}">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  ` : ''}
-                </td>
-              </tr>
-            `;
-          });
-          
-          // Add event listeners for view and cancel buttons
-          document.querySelectorAll('.view-order-btn').forEach(button => {
-            button.addEventListener('click', function() {
-              const orderId = this.getAttribute('data-order-id');
-              viewOrderDetails(orderId);
-            });
-          });
-          
-          document.querySelectorAll('.cancel-btn').forEach(button => {
-            button.addEventListener('click', function() {
-              const orderId = this.getAttribute('data-order-id');
-              if (confirm('Are you sure you want to cancel this order?')) {
-                cancelOrder(orderId);
-              }
-            });
-          });
+          hideEmptyState();
+          renderProducts(products);
         }
       } catch (error) {
-        console.error('Load orders error:', error);
-        document.getElementById('orders-table-body').innerHTML = `
-          <tr>
-            <td colspan="8" class="text-center py-4">
-              <div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle me-2"></i>Error loading orders: ${error.message}
-              </div>
-            </td>
-          </tr>
-        `;
+        console.error('Error loading products:', error);
+        showAlert('Failed to load products. Please try again.', 'error');
+      } finally {
+        hideLoading();
       }
     }
     
-    // View order details
-    async function viewOrderDetails(orderId) {
-      try {
-        const token = getToken();
-        
-        // In a real app, you would fetch order details from an API endpoint
-        // For the hackathon, we'll simulate this with the orders we already loaded
-        const response = await fetch(`${API_URL}/orders/customer`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.message || 'Could not fetch order details');
-        }
-        
-        const orders = data.data;
-        const order = orders.find(o => o._id === orderId);
-        
-        if (!order) {
-          throw new Error('Order not found');
-        }
-        
-        // Show order details in modal
-        const orderDetailsContent = document.getElementById('order-details-content');
-        const orderDate = new Date(order.createdAt).toLocaleDateString();
-        let statusBadgeClass = '';
-        
-        switch (order.status) {
-          case 'pending':
-            statusBadgeClass = 'bg-warning';
-            break;
-          case 'confirmed':
-            statusBadgeClass = 'bg-primary';
-            break;
-          case 'shipped':
-            statusBadgeClass = 'bg-info';
-            break;
-          case 'delivered':
-            statusBadgeClass = 'bg-success';
-            break;
-          case 'cancelled':
-            statusBadgeClass = 'bg-danger';
-            break;
-        }
-        
-        orderDetailsContent.innerHTML = `
-          <div class="row">
-            <div class="col-md-6">
-              <h6>Order Information</h6>
-              <p><strong>Order ID:</strong> ${order._id}</p>
-              <p><strong>Date:</strong> ${orderDate}</p>
-              <p><strong>Status:</strong> <span class="badge ${statusBadgeClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></p>
-              <p><strong>Total:</strong> $${order.totalPrice.toFixed(2)}</p>
-            </div>
-            <div class="col-md-6">
-              <h6>Crop Information</h6>
-              <p><strong>Crop:</strong> ${order.cropName}</p>
-              <p><strong>Quantity:</strong> ${order.quantity} ${order.unit}</p>
-              <p><strong>Farmer:</strong> ${order.sellerName}</p>
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-md-6">
-              <h6>Delivery Information</h6>
-              <p><strong>Address:</strong> ${order.deliveryAddress}</p>
-              <p><strong>Contact:</strong> ${order.contactPhone}</p>
-            </div>
-            <div class="col-md-6">
-              <h6>Payment Information</h6>
-              <p><strong>Method:</strong> Pay on Delivery</p>
-              <p><strong>Amount:</strong> $${order.totalPrice.toFixed(2)}</p>
-            </div>
-          </div>
-        `;
-        
-        // Show cancel button if order is pending
-        const cancelBtn = document.getElementById('cancel-order-btn');
-        if (order.status === 'pending') {
-          cancelBtn.classList.remove('d-none');
-          cancelBtn.setAttribute('data-order-id', order._id);
-          
-          // Add event listener for cancel button in modal
-          cancelBtn.addEventListener('click', function() {
-            const orderId = this.getAttribute('data-order-id');
-            if (confirm('Are you sure you want to cancel this order?')) {
-              cancelOrder(orderId);
-              
-              // Hide modal
-              const modal = bootstrap.Modal.getInstance(document.getElementById('orderDetailsModal'));
-              modal.hide();
-            }
-          });
-        } else {
-          cancelBtn.classList.add('d-none');
-        }
-        
-        // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-        modal.show();
-      } catch (error) {
-        console.error('View order details error:', error);
-        alert(`Error: ${error.message}`);
-      }
-    }
-    
-    // Cancel order
-    async function cancelOrder(orderId) {
-      try {
-        const token = getToken();
-        
-        const response = await fetch(`${API_URL}/orders/${orderId}/cancel`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-          throw new Error(data.message || 'Could not cancel order');
-        }
-        
-        // Reload orders
-        loadCustomerOrders();
-        
-        // Show success message
-        alert('Order cancelled successfully!');
-      } catch (error) {
-        console.error('Cancel order error:', error);
-        alert(`Error: ${error.message}`);
-      }
-    }
-    
-    // Filter orders by status
-    function filterOrders(status) {
-      const rows = document.querySelectorAll('#orders-table-body tr');
+    function renderProducts(products) {
+      productGrid.innerHTML = '';
       
-      rows.forEach(row => {
-        if (status === 'all' || row.getAttribute('data-order-status') === status) {
-          row.style.display = '';
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.dataset.category = product.category;
+        
+        // Format price with 2 decimal places
+        const formattedPrice = '₹' + parseFloat(product.price).toFixed(2);
+        
+        // Use default image if no image URL
+        const imageUrl = product.imageUrl || '/api/placeholder/400/300';
+        
+        productCard.innerHTML = `
+          <img src="${imageUrl}" alt="${product.name}" class="product-image">
+          <div class="product-details">
+            <h3 class="product-name">${product.name}</h3>
+            <p class="product-price">${formattedPrice}/kg</p>
+            <div class="product-seller">
+              <i class="fas fa-store"></i>
+              <span>${product.sellerName || 'Unknown Seller'}</span>
+            </div>
+            <div class="product-rating">
+              <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </div>
+              <span class="rating-count">(${Math.floor(Math.random() * 50) + 10})</span>
+            </div>
+            <button class="add-to-cart-btn" data-id="${product.id}">
+              <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+          </div>
+        `;
+        
+        // Add event listener for add to cart button
+        productCard.querySelector('.add-to-cart-btn').addEventListener('click', function() {
+          handleAddToCart(product.id);
+        });
+        
+        productGrid.appendChild(productCard);
+      });
+    }
+    
+    function filterProducts(category) {
+      // Update section title
+      productsTitle.textContent = category === 'all' ? 'All Products' : category;
+      
+      // Get all product cards
+      const productCards = document.querySelectorAll('.product-card');
+      
+      // If "all" is selected, show all products
+      if (category === 'all') {
+        productCards.forEach(card => {
+          card.style.display = 'block';
+        });
+        return;
+      }
+      
+      // Otherwise, filter products by category
+      productCards.forEach(card => {
+        if (card.dataset.category === category) {
+          card.style.display = 'block';
         } else {
-          row.style.display = 'none';
+          card.style.display = 'none';
         }
       });
+      
+      // Check if there are any visible products
+      const visibleProducts = document.querySelectorAll('.product-card[style="display: block;"]');
+      if (visibleProducts.length === 0) {
+        emptyState.style.display = 'block';
+      } else {
+        emptyState.style.display = 'none';
+      }
+    }
+    
+    async function handleAddToCart(productId) {
+      try {
+        // Add to cart
+        await addToCart(productId, 1);
+        
+        // Show success alert
+        showAlert('Product added to cart!', 'success');
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        showAlert('Failed to add product to cart.', 'error');
+      }
+    }
+    
+    function updateCartUI(cart) {
+      // Update cart badge count
+      cartCount.textContent = cart.totalItems;
+      cartItemsCount.textContent = cart.totalItems;
+      
+      // Update cart total
+      cartTotal.textContent = `₹${cart.totalPrice.toFixed(2)}`;
+      
+      // Show or hide empty cart message
+      if (cart.items.length === 0) {
+        cartEmpty.style.display = 'block';
+      } else {
+        cartEmpty.style.display = 'none';
+      }
+      
+      // Render cart items
+      renderCartItems(cart.items);
+    }
+    
+    function renderCartItems(items) {
+      // Clear existing items except empty message
+      const existingItems = cartItems.querySelectorAll('.cart-item');
+      existingItems.forEach(item => item.remove());
+      
+      // Render new items
+      items.forEach(item => {
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        
+        // Use default image if no image URL
+        const imageUrl = item.imageUrl || '/api/placeholder/80/80';
+        
+        cartItem.innerHTML = `
+          <img src="${imageUrl}" alt="${item.name}" class="cart-item-image">
+          <div class="cart-item-details">
+            <h4 class="cart-item-name">${item.name}</h4>
+            <p class="cart-item-price">₹${item.price.toFixed(2)}/kg</p>
+            <div class="cart-item-controls">
+              <div class="quantity-controls">
+                <button class="quantity-btn minus" data-id="${item.productId}">-</button>
+                <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.productId}">
+                <button class="quantity-btn plus" data-id="${item.productId}">+</button>
+              </div>
+              <button class="remove-item" data-id="${item.productId}">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Add event listeners for quantity controls
+        cartItem.querySelector('.minus').addEventListener('click', function() {
+          updateQuantity(item.productId, Math.max(1, item.quantity - 1));
+        });
+        
+        cartItem.querySelector('.plus').addEventListener('click', function() {
+          updateQuantity(item.productId, item.quantity + 1);
+        });
+        
+        cartItem.querySelector('.quantity-input').addEventListener('change', function(e) {
+          const newQuantity = parseInt(e.target.value);
+          if (newQuantity > 0) {
+            updateQuantity(item.productId, newQuantity);
+          } else {
+            e.target.value = item.quantity;
+          }
+        });
+        
+        cartItem.querySelector('.remove-item').addEventListener('click', function() {
+          removeItem(item.productId);
+        });
+        
+        cartItems.appendChild(cartItem);
+      });
+    }
+    
+    async function updateQuantity(productId, quantity) {
+      try {
+        await updateCartItemQuantity(productId, quantity);
+      } catch (error) {
+        console.error('Error updating quantity:', error);
+        showAlert('Failed to update quantity.', 'error');
+      }
+    }
+    
+    async function removeItem(productId) {
+      try {
+        await removeFromCart(productId);
+        showAlert('Item removed from cart.', 'success');
+      } catch (error) {
+        console.error('Error removing item:', error);
+        showAlert('Failed to remove item.', 'error');
+      }
+    }
+    
+    function openCart() {
+      cartSidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeCart() {
+      cartSidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    function toggleDropdown() {
+      dropdownMenu.classList.toggle('show');
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function closeDropdown(e) {
+        if (!e.target.closest('#toggle-dropdown') && !e.target.closest('#dropdown-menu')) {
+          dropdownMenu.classList.remove('show');
+          document.removeEventListener('click', closeDropdown);
+        }
+      });
+    }
+    
+    async function handleLogout() {
+      try {
+        // Unsubscribe from cart updates
+        if (cartUnsubscribe) {
+          cartUnsubscribe();
+        }
+        
+        await logout();
+        window.location.href = 'login.html';
+      } catch (error) {
+        console.error('Error logging out:', error);
+      }
+    }
+    
+    function handleCheckout() {
+      alert('Checkout functionality will be implemented soon!');
+    }
+    
+    function showAlert(message, type) {
+      alert.className = `alert alert-${type}`;
+      alertMessage.textContent = message;
+      
+      alert.classList.add('show');
+      
+      // Hide alert after 3 seconds
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, 3000);
+    }
+    
+    function showLoading() {
+      loadingSpinner.style.display = 'flex';
+      productGrid.style.display = 'none';
+      emptyState.style.display = 'none';
+    }
+    
+    function hideLoading() {
+      loadingSpinner.style.display = 'none';
+      productGrid.style.display = 'grid';
+    }
+    
+    function showEmptyState() {
+      emptyState.style.display = 'block';
+      productGrid.style.display = 'none';
+    }
+    
+    function hideEmptyState() {
+      emptyState.style.display = 'none';
+      productGrid.style.display = 'grid';
     }
   </script>
 </body>

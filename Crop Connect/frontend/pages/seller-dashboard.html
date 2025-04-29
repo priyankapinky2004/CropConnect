@@ -1,924 +1,1094 @@
-<div class="bg-light-warning rounded-circle p-3 me-3">
-    <i class="fas fa-shopping-cart fa-2x text-warning"></i>
-  </div>
-  <div>
-    <h6 class="text-muted mb-1">Pending Orders</h6>
-    <h4 class="fw-bold mb-0" id="pending-orders-count">0</h4>
-  </div>
-</div>
-<p class="text-muted small">Orders waiting to be processed</p>
-</div>
-</div>
-</div>
-<div class="col-md-4">
-<div class="card dashboard-card h-100">
-<div class="card-body">
-<div class="d-flex align-items-center mb-3">
-  <div class="bg-light-info rounded-circle p-3 me-3">
-    <i class="fas fa-dollar-sign fa-2x text-info"></i>
-  </div>
-  <div>
-    <h6 class="text-muted mb-1">Total Revenue</h6>
-    <h4 class="fw-bold mb-0" id="total-revenue">$0.00</h4>
-  </div>
-</div>
-<p class="text-muted small">Revenue from all completed orders</p>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Tabs -->
-<ul class="nav nav-tabs mb-4" id="dashboardTab" role="tablist">
-<li class="nav-item" role="presentation">
-<button class="nav-link active" id="crops-tab" data-bs-toggle="tab" data-bs-target="#crops" type="button" role="tab" aria-controls="crops" aria-selected="true">
-<i class="fas fa-leaf me-2"></i>My Crops
-</button>
-</li>
-<li class="nav-item" role="presentation">
-<button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="false">
-<i class="fas fa-shopping-cart me-2"></i>Orders
-</button>
-</li>
-</ul>
-
-<!-- Tab Content -->
-<div class="tab-content" id="dashboardTabContent">
-<!-- My Crops Tab -->
-<div class="tab-pane fade show active" id="crops" role="tabpanel" aria-labelledby="crops-tab">
-<!-- Search and Filter -->
-<div class="row mb-4">
-<div class="col-md-8">
-<div class="input-group">
-  <input type="text" class="form-control" placeholder="Search crops..." id="search-crops">
-  <button class="btn btn-outline-secondary" type="button" id="search-button">
-    <i class="fas fa-search"></i>
-  </button>
-</div>
-</div>
-<div class="col-md-4">
-<select class="form-select" id="sort-crops">
-  <option value="newest">Newest First</option>
-  <option value="oldest">Oldest First</option>
-  <option value="price-high">Price (High to Low)</option>
-  <option value="price-low">Price (Low to High)</option>
-</select>
-</div>
-</div>
-
-<!-- Crops List -->
-<div class="row" id="my-crops-list">
-<!-- Crops will be loaded here dynamically -->
-<div class="col-12 text-center py-5">
-<div class="spinner-border text-primary" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Orders Tab -->
-<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-<!-- Filter Orders -->
-<div class="mb-4">
-<select class="form-select" id="filter-orders">
-<option value="all">All Orders</option>
-<option value="pending">Pending</option>
-<option value="confirmed">Confirmed</option>
-<option value="shipped">Shipped</option>
-<option value="delivered">Delivered</option>
-<option value="cancelled">Cancelled</option>
-</select>
-</div>
-
-<!-- Orders Table -->
-<div class="table-responsive">
-<table class="table table-hover">
-<thead class="table-light">
-  <tr>
-    <th>Order ID</th>
-    <th>Customer</th>
-    <th>Crop</th>
-    <th>Quantity</th>
-    <th>Total</th>
-    <th>Status</th>
-    <th>Date</th>
-    <th>Actions</th>
-  </tr>
-</thead>
-<tbody id="orders-table-body">
-  <!-- Orders will be loaded here dynamically -->
-  <tr>
-    <td colspan="8" class="text-center py-4">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</section>
-
-<!-- Add Crop Modal -->
-<div class="modal fade" id="addCropModal" tabindex="-1" aria-labelledby="addCropModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="addCropModalLabel"><i class="fas fa-plus me-2"></i>Add New Crop</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-<div class="alert alert-danger d-none" id="add-crop-error"></div>
-<form id="add-crop-form">
-<div class="row mb-3">
-<div class="col-md-6">
-  <label for="crop-name" class="form-label">Crop Name</label>
-  <input type="text" class="form-control" id="crop-name" name="name" required>
-</div>
-<div class="col-md-6">
-  <label for="crop-price" class="form-label">Price per Unit</label>
-  <div class="input-group">
-    <span class="input-group-text">$</span>
-    <input type="number" step="0.01" min="0.01" class="form-control" id="crop-price" name="price" required>
-    <select class="form-select" id="crop-unit" name="unit" style="max-width: 80px;">
-      <option value="kg">kg</option>
-      <option value="g">g</option>
-      <option value="lb">lb</option>
-      <option value="ton">ton</option>
-    </select>
-  </div>
-</div>
-</div>
-
-<div class="row mb-3">
-<div class="col-md-6">
-  <label for="crop-quantity" class="form-label">Available Quantity</label>
-  <input type="number" min="1" class="form-control" id="crop-quantity" name="quantity" required>
-</div>
-<div class="col-md-6">
-  <label for="crop-location" class="form-label">Harvest Location</label>
-  <input type="text" class="form-control" id="crop-location" name="location" required>
-</div>
-</div>
-
-<div class="mb-3">
-<label for="crop-description" class="form-label">Description</label>
-<textarea class="form-control" id="crop-description" name="description" rows="3" required></textarea>
-<small class="text-muted">Provide details about your crop (growing methods, freshness, etc.)</small>
-</div>
-
-<div class="mb-3">
-<label for="crop-image" class="form-label">Crop Image</label>
-<input type="file" class="form-control" id="crop-image" name="cropImage">
-<small class="text-muted">Recommended size: 800x600 pixels</small>
-</div>
-
-<div class="mb-3">
-<label for="harvest-date" class="form-label">Harvest Date</label>
-<input type="date" class="form-control" id="harvest-date" name="harvestDate">
-</div>
-</form>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-<button type="button" class="btn btn-primary" id="save-crop-btn">Save Crop</button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Edit Crop Modal -->
-<div class="modal fade" id="editCropModal" tabindex="-1" aria-labelledby="editCropModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="editCropModalLabel"><i class="fas fa-edit me-2"></i>Edit Crop</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-<div class="alert alert-danger d-none" id="edit-crop-error"></div>
-<form id="edit-crop-form">
-<input type="hidden" id="edit-crop-id" name="cropId">
-<div class="row mb-3">
-<div class="col-md-6">
-  <label for="edit-crop-name" class="form-label">Crop Name</label>
-  <input type="text" class="form-control" id="edit-crop-name" name="name" required>
-</div>
-<div class="col-md-6">
-  <label for="edit-crop-price" class="form-label">Price per Unit</label>
-  <div class="input-group">
-    <span class="input-group-text">$</span>
-    <input type="number" step="0.01" min="0.01" class="form-control" id="edit-crop-price" name="price" required>
-    <select class="form-select" id="edit-crop-unit" name="unit" style="max-width: 80px;">
-      <option value="kg">kg</option>
-      <option value="g">g</option>
-      <option value="lb">lb</option>
-      <option value="ton">ton</option>
-    </select>
-  </div>
-</div>
-</div>
-
-<div class="row mb-3">
-<div class="col-md-6">
-  <label for="edit-crop-quantity" class="form-label">Available Quantity</label>
-  <input type="number" min="0" class="form-control" id="edit-crop-quantity" name="quantity" required>
-</div>
-<div class="col-md-6">
-  <label for="edit-crop-location" class="form-label">Harvest Location</label>
-  <input type="text" class="form-control" id="edit-crop-location" name="location" required>
-</div>
-</div>
-
-<div class="mb-3">
-<label for="edit-crop-description" class="form-label">Description</label>
-<textarea class="form-control" id="edit-crop-description" name="description" rows="3" required></textarea>
-</div>
-
-<div class="mb-3">
-<label for="edit-crop-image" class="form-label">Crop Image</label>
-<input type="file" class="form-control" id="edit-crop-image" name="cropImage">
-<small class="text-muted">Leave empty to keep current image</small>
-</div>
-</form>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-<button type="button" class="btn btn-primary" id="update-crop-btn">Update Crop</button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Update Order Status Modal -->
-<div class="modal fade" id="updateOrderModal" tabindex="-1" aria-labelledby="updateOrderModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title" id="updateOrderModalLabel">Update Order Status</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-<form id="update-order-form">
-<input type="hidden" id="order-id" name="orderId">
-
-<div class="mb-3">
-<label for="order-status" class="form-label">Order Status</label>
-<select class="form-select" id="order-status" name="status" required>
-  <option value="pending">Pending</option>
-  <option value="confirmed">Confirmed</option>
-  <option value="shipped">Shipped</option>
-  <option value="delivered">Delivered</option>
-  <option value="cancelled">Cancelled</option>
-</select>
-</div>
-</form>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-<button type="button" class="btn btn-primary" id="update-order-btn">Update Status</button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Custom JS -->
-<script src="../assets/js/auth.js"></script>
-<script src="../assets/js/crops.js"></script>
-<script src="../assets/js/orders.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-// Protect route - Redirect if not authenticated or not a seller
-if (!protectRoute() || !checkRole(['seller'])) {
-return;
-}
-
-// Set welcome message with seller name
-const user = getCurrentUser();
-document.getElementById('farmer-name').textContent = user.name;
-
-// Load seller's crops
-loadSellerCrops();
-
-// Load seller's orders
-loadSellerOrders();
-
-// Add event listeners for the add crop form
-document.getElementById('save-crop-btn').addEventListener('click', function() {
-const form = document.getElementById('add-crop-form');
-if (form.checkValidity()) {
-const formData = new FormData(form);
-
-// Extract form data
-const cropData = {
-name: formData.get('name'),
-price: parseFloat(formData.get('price')),
-quantity: parseInt(formData.get('quantity')),
-unit: formData.get('unit'),
-location: formData.get('location'),
-description: formData.get('description'),
-harvestDate: formData.get('harvestDate') || new Date().toISOString().split('T')[0]
-};
-
-// Add crop
-addCrop(cropData);
-} else {
-form.reportValidity();
-}
-});
-
-// Add event listeners for the update crop form
-document.getElementById('update-crop-btn').addEventListener('click', function() {
-const form = document.getElementById('edit-crop-form');
-if (form.checkValidity()) {
-const formData = new FormData(form);
-const cropId = document.getElementById('edit-crop-id').value;
-
-// Extract form data
-const cropData = {
-name: formData.get('name'),
-price: parseFloat(formData.get('price')),
-quantity: parseInt(formData.get('quantity')),
-unit: formData.get('unit'),
-location: formData.get('location'),
-description: formData.get('description')
-};
-
-// Update crop
-updateCrop(cropId, cropData);
-} else {
-form.reportValidity();
-}
-});
-
-// Add event listener for the update order status button
-document.getElementById('update-order-btn').addEventListener('click', function() {
-const orderId = document.getElementById('order-id').value;
-const status = document.getElementById('order-status').value;
-
-// Update order status
-updateOrderStatus(orderId, status);
-});
-
-// Add event listeners for sorting and filtering
-document.getElementById('sort-crops').addEventListener('change', function() {
-loadSellerCrops(this.value);
-});
-
-document.getElementById('filter-orders').addEventListener('change', function() {
-filterOrders(this.value);
-});
-
-document.getElementById('search-button').addEventListener('click', function() {
-const searchTerm = document.getElementById('search-crops').value;
-searchCrops(searchTerm);
-});
-
-// Logout functionality
-document.getElementById('logout').addEventListener('click', function(e) {
-e.preventDefault();
-logout();
-});
-});
-
-// Load seller's crops
-async function loadSellerCrops(sortBy = 'newest') {
-try {
-const token = getToken();
-
-// Get crops
-const response = await fetch(`${API_URL}/crops/seller/my-crops`, {
-method: 'GET',
-headers: {
-'Authorization': `Bearer ${token}`
-}
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not fetch crops');
-}
-
-// Update active crops count
-document.getElementById('active-crops-count').textContent = data.count;
-
-// Clear crops list
-const cropsList = document.getElementById('my-crops-list');
-cropsList.innerHTML = '';
-
-// Sort crops
-let crops = data.data;
-if (sortBy === 'newest') {
-crops.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-} else if (sortBy === 'oldest') {
-crops.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-} else if (sortBy === 'price-high') {
-crops.sort((a, b) => b.price - a.price);
-} else if (sortBy === 'price-low') {
-crops.sort((a, b) => a.price - b.price);
-}
-
-// Display crops
-if (crops.length === 0) {
-cropsList.innerHTML = `
-<div class="col-12 text-center py-5">
-<div class="alert alert-info">
-  <i class="fas fa-info-circle me-2"></i>You haven't added any crops yet.
-</div>
-<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addCropModal">
-  <i class="fas fa-plus me-2"></i>Add Your First Crop
-</button>
-</div>
-`;
-} else {
-crops.forEach(crop => {
-cropsList.innerHTML += `
-<div class="col-md-6 col-lg-4 mb-4">
-  <div class="card h-100 crop-card">
-    <img src="${crop.cropImage || '../assets/img/default-crop.png'}" class="card-img-top" alt="${crop.name}">
-    <div class="card-body">
-      <h5 class="card-title">${crop.name}</h5>
-      <p class="card-text">${crop.description.substring(0, 100)}${crop.description.length > 100 ? '...' : ''}</p>
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <span class="text-success fw-bold">${crop.price.toFixed(2)}/${crop.unit}</span>
-        <span class="badge bg-primary">${crop.quantity} ${crop.unit} available</span>
-      </div>
-      <p class="card-text"><small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> ${crop.location}</small></p>
-    </div>
-    <div class="card-footer d-flex justify-content-between">
-      <small class="text-muted">Added on ${new Date(crop.createdAt).toLocaleDateString()}</small>
-      <div>
-        <button class="btn btn-sm btn-outline-primary edit-crop-btn" data-crop-id="${crop._id}">
-          <i class="fas fa-edit"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-danger delete-crop-btn" data-crop-id="${crop._id}">
-          <i class="fas fa-trash-alt"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-});
-
-// Add event listeners for edit and delete buttons
-document.querySelectorAll('.edit-crop-btn').forEach(button => {
-button.addEventListener('click', function() {
-const cropId = this.getAttribute('data-crop-id');
-openEditCropModal(cropId);
-});
-});
-
-document.querySelectorAll('.delete-crop-btn').forEach(button => {
-button.addEventListener('click', function() {
-const cropId = this.getAttribute('data-crop-id');
-if (confirm('Are you sure you want to delete this crop?')) {
-  deleteCrop(cropId);
-}
-});
-});
-}
-} catch (error) {
-console.error('Load crops error:', error);
-document.getElementById('my-crops-list').innerHTML = `
-<div class="col-12">
-<div class="alert alert-danger">
-<i class="fas fa-exclamation-circle me-2"></i>Error loading crops: ${error.message}
-</div>
-</div>
-`;
-}
-}
-
-// Add a new crop
-async function addCrop(cropData) {
-try {
-const token = getToken();
-
-const response = await fetch(`${API_URL}/crops`, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-'Authorization': `Bearer ${token}`
-},
-body: JSON.stringify(cropData)
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not add crop');
-}
-
-// Hide modal
-const modal = bootstrap.Modal.getInstance(document.getElementById('addCropModal'));
-modal.hide();
-
-// Reset form
-document.getElementById('add-crop-form').reset();
-
-// Reload crops
-loadSellerCrops();
-
-// Show success message
-alert('Crop added successfully!');
-} catch (error) {
-console.error('Add crop error:', error);
-const errorElement = document.getElementById('add-crop-error');
-errorElement.textContent = error.message;
-errorElement.classList.remove('d-none');
-}
-}
-
-// Open edit crop modal with crop data
-async function openEditCropModal(cropId) {
-try {
-const token = getToken();
-
-const response = await fetch(`${API_URL}/crops/${cropId}`, {
-method: 'GET',
-headers: {
-'Authorization': `Bearer ${token}`
-}
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not fetch crop details');
-}
-
-const crop = data.data;
-
-// Fill form with crop data
-document.getElementById('edit-crop-id').value = crop._id;
-document.getElementById('edit-crop-name').value = crop.name;
-document.getElementById('edit-crop-price').value = crop.price;
-document.getElementById('edit-crop-unit').value = crop.unit;
-document.getElementById('edit-crop-quantity').value = crop.quantity;
-document.getElementById('edit-crop-location').value = crop.location;
-document.getElementById('edit-crop-description').value = crop.description;
-
-// Show modal
-const modal = new bootstrap.Modal(document.getElementById('editCropModal'));
-modal.show();
-} catch (error) {
-console.error('Open edit modal error:', error);
-alert(`Error: ${error.message}`);
-}
-}
-
-// Update crop
-async function updateCrop(cropId, cropData) {
-try {
-const token = getToken();
-
-const response = await fetch(`${API_URL}/crops/${cropId}`, {
-method: 'PUT',
-headers: {
-'Content-Type': 'application/json',
-'Authorization': `Bearer ${token}`
-},
-body: JSON.stringify(cropData)
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not update crop');
-}
-
-// Hide modal
-const modal = bootstrap.Modal.getInstance(document.getElementById('editCropModal'));
-modal.hide();
-
-// Reload crops
-loadSellerCrops();
-
-// Show success message
-alert('Crop updated successfully!');
-} catch (error) {
-console.error('Update crop error:', error);
-const errorElement = document.getElementById('edit-crop-error');
-errorElement.textContent = error.message;
-errorElement.classList.remove('d-none');
-}
-}
-
-// Delete crop
-async function deleteCrop(cropId) {
-try {
-const token = getToken();
-
-const response = await fetch(`${API_URL}/crops/${cropId}`, {
-method: 'DELETE',
-headers: {
-'Authorization': `Bearer ${token}`
-}
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not delete crop');
-}
-
-// Reload crops
-loadSellerCrops();
-
-// Show success message
-alert('Crop deleted successfully!');
-} catch (error) {
-console.error('Delete crop error:', error);
-alert(`Error: ${error.message}`);
-}
-}
-
-// Load seller's orders
-async function loadSellerOrders() {
-try {
-const token = getToken();
-
-const response = await fetch(`${API_URL}/orders/seller`, {
-method: 'GET',
-headers: {
-'Authorization': `Bearer ${token}`
-}
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not fetch orders');
-}
-
-const orders = data.data;
-
-// Count pending orders
-const pendingOrders = orders.filter(order => order.status === 'pending');
-document.getElementById('pending-orders-count').textContent = pendingOrders.length;
-
-// Calculate total revenue
-const totalRevenue = orders
-.filter(order => order.status === 'delivered')
-.reduce((sum, order) => sum + order.totalPrice, 0);
-document.getElementById('total-revenue').textContent = `${totalRevenue.toFixed(2)}`;
-
-// Display orders
-const ordersTableBody = document.getElementById('orders-table-body');
-
-if (orders.length === 0) {
-ordersTableBody.innerHTML = `
-<tr>
-<td colspan="8" class="text-center py-4">
-  No orders found
-</td>
-</tr>
-`;
-} else {
-ordersTableBody.innerHTML = '';
-orders.forEach(order => {
-const orderDate = new Date(order.createdAt).toLocaleDateString();
-let statusBadgeClass = '';
-
-switch (order.status) {
-case 'pending':
-  statusBadgeClass = 'bg-warning';
-  break;
-case 'confirmed':
-  statusBadgeClass = 'bg-primary';
-  break;
-case 'shipped':
-  statusBadgeClass = 'bg-info';
-  break;
-case 'delivered':
-  statusBadgeClass = 'bg-success';
-  break;
-case 'cancelled':
-  statusBadgeClass = 'bg-danger';
-  break;
-}
-
-ordersTableBody.innerHTML += `
-<tr data-order-id="${order._id}" data-order-status="${order.status}">
-  <td>${order._id.substring(0, 8)}...</td>
-  <td>${order.customerName}</td>
-  <td>${order.cropName}</td>
-  <td>${order.quantity} ${order.unit}</td>
-  <td>${order.totalPrice.toFixed(2)}</td>
-  <td><span class="badge ${statusBadgeClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
-  <td>${orderDate}</td>
-  <td>
-    <button class="btn btn-sm btn-outline-primary update-order-btn" data-order-id="${order._id}" data-order-status="${order.status}">
-      <i class="fas fa-edit"></i>
-    </button>
-  </td>
-</tr>
-`;
-});
-
-// Add event listeners for update order buttons
-document.querySelectorAll('.update-order-btn').forEach(button => {
-button.addEventListener('click', function() {
-const orderId = this.getAttribute('data-order-id');
-const currentStatus = this.getAttribute('data-order-status');
-openUpdateOrderModal(orderId, currentStatus);
-});
-});
-}
-} catch (error) {
-console.error('Load orders error:', error);
-document.getElementById('orders-table-body').innerHTML = `
-<tr>
-<td colspan="8" class="text-center py-4">
-<div class="alert alert-danger">
-  <i class="fas fa-exclamation-circle me-2"></i>Error loading orders: ${error.message}
-</div>
-</td>
-</tr>
-`;
-}
-}
-
-// Open update order modal
-function openUpdateOrderModal(orderId, currentStatus) {
-document.getElementById('order-id').value = orderId;
-document.getElementById('order-status').value = currentStatus;
-
-const modal = new bootstrap.Modal(document.getElementById('updateOrderModal'));
-modal.show();
-}
-
-// Update order status
-async function updateOrderStatus(orderId, status) {
-try {
-const token = getToken();
-
-const response = await fetch(`${API_URL}/orders/${orderId}`, {
-method: 'PUT',
-headers: {
-'Content-Type': 'application/json',
-'Authorization': `Bearer ${token}`
-},
-body: JSON.stringify({ status })
-});
-
-const data = await response.json();
-
-if (!response.ok) {
-throw new Error(data.message || 'Could not update order status');
-}
-
-// Hide modal
-const modal = bootstrap.Modal.getInstance(document.getElementById('updateOrderModal'));
-modal.hide();
-
-// Reload orders
-loadSellerOrders();
-
-// Show success message
-alert('Order status updated successfully!');
-} catch (error) {
-console.error('Update order status error:', error);
-alert(`Error: ${error.message}`);
-}
-}
-
-// Filter orders by status
-function filterOrders(status) {
-const rows = document.querySelectorAll('#orders-table-body tr');
-
-rows.forEach(row => {
-if (status === 'all' || row.getAttribute('data-order-status') === status) {
-row.style.display = '';
-} else {
-row.style.display = 'none';
-}
-});
-}
-
-// Search crops by name
-function searchCrops(term) {
-const cropCards = document.querySelectorAll('.crop-card');
-
-if (!term) {
-cropCards.forEach(card => {
-card.closest('.col-md-6').style.display = '';
-});
-return;
-}
-
-term = term.toLowerCase();
-
-cropCards.forEach(card => {
-const cropName = card.querySelector('.card-title').textContent.toLowerCase();
-const cropDescription = card.querySelector('.card-text').textContent.toLowerCase();
-
-if (cropName.includes(term) || cropDescription.includes(term)) {
-card.closest('.col-md-6').style.display = '';
-} else {
-card.closest('.col-md-6').style.display = 'none';
-}
-});
-}
-</script>
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Farmer Dashboard | CropConnect</title>
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-<!-- Custom CSS -->
-<link rel="stylesheet" href="../assets/css/style.css">
-<link rel="icon" href="../assets/img/favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard | CropConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --primary-color: #2e7d32;
+      --primary-light: #60ad5e;
+      --primary-dark: #005005;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+      --text-muted: #757575;
+      --bg-light: #f5f5f5;
+      --bg-white: #ffffff;
+      --border-color: #e0e0e0;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --danger-color: #f44336;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #e8f5f9;
+      color: var(--text-dark);
+    }
+    
+    /* Header */
+    .header {
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+    }
+    
+    .header-brand i {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    
+    .header-brand h1 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .header-user {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-name {
+      margin-right: 15px;
+    }
+    
+    .logout-btn {
+      background-color: #e53935;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    /* Layout */
+    .container {
+      display: flex;
+      height: calc(100vh - 56px);
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background-color: white;
+      border-right: 1px solid var(--border-color);
+    }
+    
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      color: var(--text-dark);
+      text-decoration: none;
+    }
+    
+    .sidebar-item.active {
+      background-color: #e8f5e9;
+      color: var(--primary-color);
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .sidebar-item:hover:not(.active) {
+      background-color: #f5f5f5;
+    }
+    
+    .sidebar-item i {
+      margin-right: 12px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .main-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--primary-dark);
+    }
+    
+    /* Stats Cards */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 108, 49, 0.08);
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      background-color: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 15px;
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    
+    /* Products Section */
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .section-title {
+      font-size: 20px;
+      font-weight: 500;
+    }
+    
+    .add-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .add-btn i {
+      margin-right: 6px;
+    }
+    
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .product-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    
+    .product-details {
+      padding: 15px;
+    }
+    
+    .product-name {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .product-price {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    .product-category {
+      display: inline-block;
+      background-color: #e8f5e9;
+      color: var(--primary-color);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    
+    .product-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn-edit, .btn-delete {
+      flex: 1;
+      padding: 6px 0;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .btn-edit {
+      background-color: #2196f3;
+      color: white;
+    }
+    
+    .btn-delete {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .btn-edit i, .btn-delete i {
+      margin-right: 4px;
+    }
+    
+    /* Loading State */
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(46, 125, 50, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      color: #bdbdbd;
+      margin-bottom: 10px;
+    }
+    
+    .empty-text {
+      font-size: 18px;
+      margin-bottom: 5px;
+      color: #616161;
+    }
+    
+    .empty-subtext {
+      color: #9e9e9e;
+      margin-bottom: 20px;
+    }
+    
+    /* Product Form Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      display: none;
+    }
+    
+    .modal-content {
+      background-color: white;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #757575;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .preview-image {
+      max-width: 100%;
+      max-height: 150px;
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .btn-cancel, .btn-save {
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .btn-cancel {
+      background-color: #f1f1f1;
+      color: #333;
+    }
+    
+    .btn-save {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* Alert Messages */
+    .alert {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      z-index: 1001;
+      max-width: 300px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    
+    .alert.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .alert-success {
+      background-color: #4caf50;
+      color: white;
+    }
+    
+    .alert-error {
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .alert i {
+      margin-right: 8px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .products-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .modal-content {
+        width: 90%;
+      }
+    }
+  </style>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
 </head>
 <body>
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-<div class="container">
-<a class="navbar-brand" href="index.html">
-<i class="fas fa-seedling me-2"></i>CropConnect
-</a>
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarNav">
-<ul class="navbar-nav ms-auto">
-<li class="nav-item">
-<a class="nav-link" href="index.html">Home</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="browse-crops.html">Browse Crops</a>
-</li>
-<li class="nav-item">
-<a class="nav-link active" href="seller-dashboard.html">My Dashboard</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="profile.html">My Profile</a>
-</li>
-<li class="nav-item">
-<a class="nav-link" href="#" id="logout">Logout</a>
-</li>
-</ul>
-</div>
-</div>
-</nav>
+    <!-- Navigation --->
+  <!-- Header -->
+  <header class="header">
+    <div class="header-brand">
+      <i class="fas fa-seedling"></i>
+      <h1>CropConnect</h1>
+    </div>
+    <div class="header-user">
+      <span class="user-name" id="user-name">Farmer</span>
+      <button class="logout-btn" id="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </header>
 
-<!-- Dashboard Header -->
-<section class="bg-light py-4">
-<div class="container">
-<div class="row align-items-center">
-<div class="col-md-8">
-<h1 class="fw-bold mb-0">Farmer Dashboard</h1>
-<p class="text-muted mb-0" id="welcome-message">Welcome back, <span id="farmer-name">Farmer</span>!</p>
-</div>
-<div class="col-md-4 text-md-end">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCropModal">
-<i class="fas fa-plus me-2"></i>Add New Crop
-</button>
-</div>
-</div>
-</div>
-</section>
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="seller-dashboard.html" class="sidebar-item active">
+        <i class="fas fa-tachometer-alt"></i>
+        Dashboard
+      </a>
+      <a href="products.html" class="sidebar-item">
+        <i class="fas fa-leaf"></i>
+        My Products
+      </a>
+      <a href="orders.html" class="sidebar-item">
+        <i class="fas fa-shopping-cart"></i>
+        Orders
+      </a>
+      <a href="analytics.html" class="sidebar-item">
+        <i class="fas fa-chart-bar"></i>
+        Analytics
+      </a>
+      <a href="earnings.html" class="sidebar-item">
+        <i class="fas fa-wallet"></i>
+        Earnings
+      </a>
+      <a href="settings.html" class="sidebar-item">
+        <i class="fas fa-cog"></i>
+        Settings
+      </a>
+    </div>
 
-<!-- Dashboard Content -->
-<section class="py-5">
-<div class="container">
-<!-- Stats Row -->
-<div class="row mb-4">
-<div class="col-md-4 mb-4 mb-md-0">
-<div class="card dashboard-card h-100">
-<div class="card-body">
-<div class="d-flex align-items-center mb-3">
-  <div class="bg-light-success rounded-circle p-3 me-3">
-    <i class="fas fa-leaf fa-2x text-success"></i>
+    <!-- Main Content -->
+    <div class="main">
+      <h1 class="main-title">Seller Dashboard</h1>
+      
+      <!-- Stats Cards -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-leaf"></i>
+          </div>
+          <div class="stat-value" id="product-count">0</div>
+          <div class="stat-label">Products</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <div class="stat-value" id="order-count">0</div>
+          <div class="stat-label">Orders</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-rupee-sign"></i>
+          </div>
+          <div class="stat-value" id="earnings">₹0</div>
+          <div class="stat-label">Total Earnings</div>
+        </div>
+      </div>
+      
+      <!-- Products Section -->
+      <div class="products-header">
+        <h2 class="section-title">My Products</h2>
+        <button class="add-btn" id="add-product-btn">
+          <i class="fas fa-plus"></i> Add Product
+        </button>
+      </div>
+      
+      <!-- Loading Spinner -->
+      <div class="loading-container" id="loading-spinner">
+        <div class="loading-spinner"></div>
+      </div>
+      
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="empty-icon">
+          <i class="fas fa-box-open"></i>
+        </div>
+        <div class="empty-text">No Products Yet</div>
+        <div class="empty-subtext">Start selling by adding your first product</div>
+        <button class="add-btn" id="empty-add-btn">
+          <i class="fas fa-plus"></i> Add Product
+        </button>
+      </div>
+      
+      <!-- Products Grid -->
+      <div class="products-grid" id="products-grid" style="display: none;">
+        <!-- Products will be dynamically added here -->
+      </div>
+    </div>
   </div>
-  <div>
-    <h6 class="text-muted mb-1">Active Crops</h6>
-    <h4 class="fw-bold mb-0" id="active-crops-count">0</h4>
+
+  <!-- Product Form Modal -->
+  <div class="modal" id="product-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Add New Product</h3>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="product-form">
+          <input type="hidden" id="product-id">
+          
+          <div class="form-group">
+            <label for="product-name" class="form-label">Product Name</label>
+            <input type="text" id="product-name" class="form-control" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="product-price" class="form-label">Price (₹ per kg/unit)</label>
+            <input type="number" id="product-price" class="form-control" min="0" step="0.01" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="product-category" class="form-label">Category</label>
+            <select id="product-category" class="form-control" required>
+              <option value="">Select a category</option>
+              <option value="Vegetables">Vegetables</option>
+              <option value="Fruits">Fruits</option>
+              <option value="Leafy Greens">Leafy Greens</option>
+              <option value="Herbs">Herbs</option>
+              <option value="Organic">Organic</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="product-stock" class="form-label">Stock Quantity (kg/units)</label>
+            <input type="number" id="product-stock" class="form-control" min="0" step="1" value="0">
+          </div>
+          
+          <div class="form-group">
+            <label for="product-description" class="form-label">Description</label>
+            <textarea id="product-description" class="form-control" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="product-image" class="form-label">Product Image</label>
+            <input type="file" id="product-image" class="form-control" accept="image/*">
+            <img id="image-preview" class="preview-image" alt="Product Preview">
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btn-cancel">Cancel</button>
+        <button class="btn-save" id="btn-save">Save Product</button>
+      </div>
+    </div>
   </div>
-</div>
-<p class="text-muted small">Crops currently available for sale</p>
-</div>
-</div>
-</div>
-<div class="col-md-4 mb-4 mb-md-0">
-<div class="card dashboard-card h-100">
-<div class="card-body">
-<div class="d-flex align-items-center mb-3">
-  <div class="bg-light-warning rounded-circle p-3 me-3">
-    <i class="fas fa-shopping-cart fa-2x text-warning"></i
+
+  <!-- Alert Message -->
+  <div class="alert" id="alert">
+    <i class="fas fa-check-circle"></i>
+    <span id="alert-message"></span>
+  </div>
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <h5 class="text-uppercase mb-4">CropConnect</h5>
+          <p>Fresh crops, direct from farms to families.</p>
+          <div class="d-flex">
+            <a href="" class="me-3"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/Cropconnec23918" class="me-3"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/cropconnectfarmer/" class="me-3"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/feed/"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Links</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="index.html">Home</a></li>
+            <li class="mb-2"><a href="browse-crops.html">Browse Crops</a></li>
+            <li class="mb-2"><a href="about.html">About Us</a></li>
+            <li class="mb-2"><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+          <h5 class="text-uppercase mb-4">Farmers</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="login.html">Login</a></li>
+            <li class="mb-2"><a href="register.html?role=seller">Register</a></li>
+            <li class="mb-2"><a href="seller-dashboard.html">How to Sell</a></li>
+            <li class="mb-2"><a href="browse-crops.html">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4 col-md-4">
+          <h5 class="text-uppercase mb-4">Contact Us</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Malnad College Of Engineering, Hassan</li>
+            <li class="mb-2"><i class="fas fa-phone me-2"></i>6361922126</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i>cropconnectfarmer@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-4 bg-light">
+      <div class="text-center">
+        <p class="mb-0">&copy; 2025 CropConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  <div class="alert" id="alert">
+    <i class="fas fa-check-circle"></i>
+    <span id="alert-message"></span>
+  </div>
+  <!-- Firebase Scripts -->
+  <script type="module">
+    import {
+      auth,
+      getCurrentUser,
+      getUserRole,
+      logout,
+      addProduct,
+      getProductsBySeller,
+      getProductById,
+      updateProduct,
+      deleteProduct,
+      getSellerOrders
+    } from "../assets/js/firebase-config.js";
+
+    // DOM Elements
+    const userNameElement = document.getElementById('user-name');
+    const productCountElement = document.getElementById('product-count');
+    const orderCountElement = document.getElementById('order-count');
+    const earningsElement = document.getElementById('earnings');
+    const productsGrid = document.getElementById('products-grid');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const emptyState = document.getElementById('empty-state');
+    
+    const productModal = document.getElementById('product-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const productForm = document.getElementById('product-form');
+    const productIdInput = document.getElementById('product-id');
+    const productNameInput = document.getElementById('product-name');
+    const productPriceInput = document.getElementById('product-price');
+    const productCategoryInput = document.getElementById('product-category');
+    const productStockInput = document.getElementById('product-stock');
+    const productDescriptionInput = document.getElementById('product-description');
+    const productImageInput = document.getElementById('product-image');
+    const imagePreview = document.getElementById('image-preview');
+    
+    const alert = document.getElementById('alert');
+    const alertMessage = document.getElementById('alert-message');
+
+    // Event Listeners
+    document.getElementById('logout-btn').addEventListener('click', handleLogout);
+    document.getElementById('add-product-btn').addEventListener('click', openAddModal);
+    document.getElementById('empty-add-btn').addEventListener('click', openAddModal);
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('btn-cancel').addEventListener('click', closeModal);
+    document.getElementById('btn-save').addEventListener('click', saveProduct);
+    productImageInput.addEventListener('change', previewImage);
+
+    // Check authentication and load data
+    checkAuth();
+
+    // Functions
+    async function checkAuth() {
+      try {
+        // Get current user
+        const user = auth.currentUser;
+        
+        if (!user) {
+          // Check if there's a pending auth state change
+          const userCred = await getCurrentUser();
+          if (!userCred) {
+            window.location.href = '/frontend/pages/login.html';
+            return;
+          }
+        }
+        
+        // Verify user is a seller
+        const role = await getUserRole(auth.currentUser.uid);
+        if (role !== 'seller') {
+          window.location.href = '/frontend/pages/customer-dashboard.html';
+          return;
+        }
+        
+        // Display user name
+        userNameElement.textContent = auth.currentUser.displayName || 'Farmer';
+        
+        // Load data
+        loadProducts();
+        loadStats();
+      } catch (error) {
+        console.error("Auth error:", error);
+        window.location.href = '/frontend/pages/login.html';
+      }
+    }
+
+    async function loadProducts() {
+      try {
+        // Show loading state
+        showLoading();
+        
+        // Get products for current seller
+        const products = await getProductsBySeller(auth.currentUser.uid);
+        
+        // Update product count
+        productCountElement.textContent = products.length;
+        
+        // If no products, show empty state
+        if (products.length === 0) {
+          showEmptyState();
+        } else {
+          hideEmptyState();
+          renderProducts(products);
+        }
+      } catch (error) {
+        console.error("Error loading products:", error);
+        showAlert("Failed to load products: " + error.message, "error");
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function loadStats() {
+      try {
+        // Get seller's orders
+        const orders = await getSellerOrders();
+        
+        // Update order count
+        orderCountElement.textContent = orders.length;
+        
+        // Calculate total earnings from completed orders
+        let totalEarnings = 0;
+        orders.forEach(order => {
+          if (order.status === 'completed') {
+            totalEarnings += order.totalPrice;
+          }
+        });
+        
+        // Update earnings display
+        earningsElement.textContent = `₹${totalEarnings.toFixed(2)}`;
+      } catch (error) {
+        console.error("Error loading stats:", error);
+        // Don't show error for stats - fail silently
+      }
+    }
+
+    function renderProducts(products) {
+      // Clear existing products
+      productsGrid.innerHTML = '';
+      
+      // Create product cards
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        
+        // Format price with 2 decimal places
+        const formattedPrice = `₹${parseFloat(product.price).toFixed(2)}`;
+        
+        // Use placeholder if no image
+        const imageUrl = product.imageUrl || 'https://via.placeholder.com/300x180?text=No+Image';
+        
+        card.innerHTML = `
+          <img src="${imageUrl}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x180?text=Image+Error'">
+          <div class="product-details">
+            <h3 class="product-name">${product.name}</h3>
+            <p class="product-price">${formattedPrice}/kg</p>
+            <span class="product-category">${product.category}</span>
+            <div class="product-actions">
+              <button class="btn-edit" data-id="${product.id}">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn-delete" data-id="${product.id}">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Add event listeners
+        card.querySelector('.btn-edit').addEventListener('click', () => openEditModal(product.id));
+        card.querySelector('.btn-delete').addEventListener('click', () => confirmDelete(product.id, product.name));
+        
+        // Add to grid
+        productsGrid.appendChild(card);
+      });
+      
+      // Show products grid
+      productsGrid.style.display = 'grid';
+    }
+
+    function openAddModal() {
+      // Reset form
+      productForm.reset();
+      productIdInput.value = '';
+      imagePreview.style.display = 'none';
+      
+      // Set modal title
+      modalTitle.textContent = 'Add New Product';
+      
+      // Show modal
+      productModal.style.display = 'flex';
+    }
+
+    async function openEditModal(productId) {
+      try {
+        // Get product details
+        const product = await getProductById(productId);
+        
+        // Fill form with product data
+        productIdInput.value = product.id;
+        productNameInput.value = product.name;
+        productPriceInput.value = product.price;
+        productCategoryInput.value = product.category;
+        productStockInput.value = product.stock || 0;
+        productDescriptionInput.value = product.description || '';
+        
+        // Show image preview if available
+        if (product.imageUrl) {
+          imagePreview.src = product.imageUrl;
+          imagePreview.style.display = 'block';
+        } else {
+          imagePreview.style.display = 'none';
+        }
+        
+        // Set modal title
+        modalTitle.textContent = 'Edit Product';
+        
+        // Show modal
+        productModal.style.display = 'flex';
+      } catch (error) {
+        console.error("Error opening edit modal:", error);
+        showAlert("Failed to load product details: " + error.message, "error");
+      }
+    }
+
+    function closeModal() {
+      productModal.style.display = 'none';
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.style.display = 'none';
+      }
+    }
+
+    async function saveProduct() {
+      try {
+        // Get form data
+        const productId = productIdInput.value;
+        const productData = {
+          name: productNameInput.value,
+          price: parseFloat(productPriceInput.value),
+          category: productCategoryInput.value,
+          stock: parseInt(productStockInput.value),
+          description: productDescriptionInput.value
+        };
+        
+        // Validate form data
+        if (!productData.name || isNaN(productData.price) || !productData.category) {
+          showAlert("Please fill in all required fields correctly", "error");
+          return;
+        }
+        
+        // Get image file if selected
+        const imageFile = productImageInput.files.length > 0 ? productImageInput.files[0] : null;
+        
+        // Close modal
+        closeModal();
+        
+        // Show loading
+        showLoading();
+        
+        if (productId) {
+          // Update existing product
+          await updateProduct(productId, productData, imageFile);
+          showAlert("Product updated successfully!", "success");
+        } else {
+          // Add new product
+          await addProduct(productData, imageFile);
+          showAlert("Product added successfully!", "success");
+        }
+        
+        // Refresh products list
+        loadProducts();
+      } catch (error) {
+        console.error("Error saving product:", error);
+        showAlert("Failed to save product: " + error.message, "error");
+        hideLoading();
+      }
+    }
+
+    async function confirmDelete(productId, productName) {
+      if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+        try {
+          showLoading();
+          await deleteProduct(productId);
+          showAlert("Product deleted successfully!", "success");
+          loadProducts();
+        } catch (error) {
+          console.error("Error deleting product:", error);
+          showAlert("Failed to delete product: " + error.message, "error");
+          hideLoading();
+        }
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await logout();
+        window.location.href = '/frontend/pages/login.html';
+      } catch (error) {
+        console.error("Logout error:", error);
+        showAlert("Failed to logout: " + error.message, "error");
+      }
+    }
+
+    function showAlert(message, type) {
+      alertMessage.textContent = message;
+      alert.className = `alert alert-${type}`;
+      
+      // Show alert
+      setTimeout(() => {
+        alert.classList.add('show');
+      }, 10);
+      
+      // Hide alert after 3 seconds
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, 3000);
+    }
+
+    function showLoading() {
+      loadingSpinner.style.display = 'flex';
+      productsGrid.style.display = 'none';
+      emptyState.style.display = 'none';
+    }
+
+    function hideLoading() {
+      loadingSpinner.style.display = 'none';
+    }
+
+    function showEmptyState() {
+      emptyState.style.display = 'block';
+      productsGrid.style.display = 'none';
+    }
+
+    function hideEmptyState() {
+      emptyState.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

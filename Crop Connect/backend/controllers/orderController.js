@@ -1,71 +1,71 @@
-const Order = require('../models/Order');
-const Crop = require('../models/Crop');
-const User = require('../models/User');
+const { orderDb, orderAdmin } = require('../config/firebase');
 
 // @desc    Place a new order
 // @route   POST /api/orders
 // @access  Private (Customers only)
 exports.placeOrder = async (req, res) => {
   try {
-    const { cropId, quantity, deliveryAddress, contactPhone } = req.body;
+    const { cropId, quantity, deliveryAddress, contactPhone, totalPrice } = req.body;
 
-    // Check if customer exists
-    const customer = await User.findById(req.user.id);
-    if (!customer || customer.role !== 'customer') {
+    if (req.user.role !== 'customer') {
       return res.status(403).json({
         success: false,
-        message: 'Only customers can place orders'
+        message: 'Access denied',
       });
     }
 
-    // Check if crop exists
-    const crop = await Crop.findById(cropId);
-    if (!crop) {
-      return res.status(404).json({
-        success: false,
-        message: 'Crop not found'
+    let orderRef = orderDb.collection('orders').doc();
+    let orderData;
+
+    await orderDb.runTransaction(async (transaction) => {
+      const cropRef = orderDb.collection('crops').doc(cropId);
+      const freshCropDoc = await transaction.get(cropRef);
+
+      if (!freshCropDoc.exists) {
+        throw new Error('Crop not found');
+      }
+
+      const freshCrop = freshCropDoc.data();
+
+      if (freshCrop.quantity < quantity) {
+        throw new Error(`Only ${freshCrop.quantity} ${freshCrop.unit} available`);
+      }
+
+      orderData = {
+        id: orderRef.id,
+        cropId,
+        cropName: freshCrop.name,
+        customerId: req.user.uid,
+        customerName: req.user.name,
+        sellerId: freshCrop.sellerId,
+        sellerName: freshCrop.sellerName,
+        quantity: parseInt(quantity),
+        unit: freshCrop.unit,
+        price: freshCrop.price,
+        totalPrice: parseFloat(totalPrice),
+        deliveryAddress,
+        contactPhone,
+        status: 'pending',
+        createdAt: orderAdmin.firestore.FieldValue.serverTimestamp(),
+      };
+
+      transaction.update(cropRef, {
+        quantity: freshCrop.quantity - parseInt(quantity),
       });
-    }
 
-    // Check if quantity is available
-    if (crop.quantity < quantity) {
-      return res.status(400).json({
-        success: false,
-        message: `Only ${crop.quantity} ${crop.unit} available`
-      });
-    }
-
-    // Calculate total price
-    const totalPrice = crop.price * quantity;
-
-    // Create order
-    const order = await Order.create({
-      cropId,
-      cropName: crop.name,
-      customerId: req.user.id,
-      customerName: customer.name,
-      sellerId: crop.sellerId,
-      quantity,
-      unit: crop.unit,
-      totalPrice,
-      deliveryAddress,
-      contactPhone
+      transaction.set(orderRef, orderData);
     });
-
-    // Update crop quantity
-    crop.quantity -= quantity;
-    await crop.save();
 
     res.status(201).json({
       success: true,
-      data: order
+      data: orderData,
     });
   } catch (error) {
     console.error('Place order error:', error);
     res.status(500).json({
       success: false,
       message: 'Could not place order',
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -75,19 +75,35 @@ exports.placeOrder = async (req, res) => {
 // @access  Private (Customers only)
 exports.getCustomerOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ customerId: req.user.id });
+    if (req.user.role !== 'customer') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied',
+      });
+    }
+
+    const ordersSnapshot = await orderDb
+      .collection('orders')
+      .where('customerId', '==', req.user.uid)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const orders = ordersSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
     res.status(200).json({
       success: true,
       count: orders.length,
-      data: orders
+      data: orders,
     });
   } catch (error) {
     console.error('Get customer orders error:', error);
     res.status(500).json({
       success: false,
       message: 'Could not fetch customer orders',
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -97,19 +113,35 @@ exports.getCustomerOrders = async (req, res) => {
 // @access  Private (Sellers only)
 exports.getSellerOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ sellerId: req.user.id });
+    if (req.user.role !== 'seller') {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied',
+      });
+    }
+
+    const ordersSnapshot = await orderDb
+      .collection('orders')
+      .where('sellerId', '==', req.user.uid)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const orders = ordersSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
     res.status(200).json({
       success: true,
       count: orders.length,
-      data: orders
+      data: orders,
     });
   } catch (error) {
     console.error('Get seller orders error:', error);
     res.status(500).json({
       success: false,
       message: 'Could not fetch seller orders',
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -120,109 +152,142 @@ exports.getSellerOrders = async (req, res) => {
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    
-    // Check if status is valid
+    const orderId = req.params.id;
+
     if (!['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'].includes(status)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid status'
+        message: 'Invalid status',
       });
     }
-    
-    // Find order
-    let order = await Order.findById(req.params.id);
-    
-    if (!order) {
+
+    const orderDocRef = orderDb.collection('orders').doc(orderId);
+    const orderDoc = await orderDocRef.get();
+
+    if (!orderDoc.exists) {
       return res.status(404).json({
         success: false,
-        message: 'Order not found'
+        message: 'Order not found',
       });
     }
-    
-    // Check if user is the seller
-    if (order.sellerId.toString() !== req.user.id) {
+
+    const orderData = orderDoc.data();
+
+    if (orderData.sellerId !== req.user.uid) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to update this order'
+        message: 'Not authorized to update this order',
       });
     }
-    
-    // Update order
-    order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true, runValidators: true }
-    );
-    
+
+    if (status === 'cancelled' && orderData.status !== 'cancelled') {
+      await orderDb.runTransaction(async (transaction) => {
+        const cropRef = orderDb.collection('crops').doc(orderData.cropId);
+        const cropDoc = await transaction.get(cropRef);
+
+        if (cropDoc.exists) {
+          const currentQuantity = cropDoc.data().quantity;
+
+          transaction.update(cropRef, {
+            quantity: currentQuantity + orderData.quantity,
+          });
+        }
+
+        transaction.update(orderDocRef, {
+          status,
+          updatedAt: orderAdmin.firestore.FieldValue.serverTimestamp(),
+        });
+      });
+    } else {
+      await orderDocRef.update({
+        status,
+        updatedAt: orderAdmin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+
+    const updatedOrderDoc = await orderDocRef.get();
+
     res.status(200).json({
       success: true,
-      data: order
+      data: {
+        ...updatedOrderDoc.data(),
+        id: orderId,
+      },
     });
   } catch (error) {
     console.error('Update order status error:', error);
     res.status(500).json({
       success: false,
       message: 'Could not update order status',
-      error: error.message
+      error: error.message,
     });
   }
 };
 
-// @desc    Cancel order
+// @desc    Cancel order (Customer only)
 // @route   PUT /api/orders/:id/cancel
 // @access  Private (Customers only)
 exports.cancelOrder = async (req, res) => {
   try {
-    // Find order
-    let order = await Order.findById(req.params.id);
-    
-    if (!order) {
+    const orderId = req.params.id;
+    const orderDocRef = orderDb.collection('orders').doc(orderId);
+    const orderDoc = await orderDocRef.get();
+
+    if (!orderDoc.exists) {
       return res.status(404).json({
         success: false,
-        message: 'Order not found'
+        message: 'Order not found',
       });
     }
-    
-    // Check if user is the customer
-    if (order.customerId.toString() !== req.user.id) {
+
+    const orderData = orderDoc.data();
+
+    if (orderData.customerId !== req.user.uid) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to cancel this order'
+        message: 'Not authorized to cancel this order',
       });
     }
-    
-    // Check if order is cancellable (only pending orders can be cancelled)
-    if (order.status !== 'pending') {
+
+    if (orderData.status !== 'pending') {
       return res.status(400).json({
         success: false,
-        message: `Cannot cancel order in '${order.status}' status`
+        message: `Cannot cancel order in '${orderData.status}' status`,
       });
     }
-    
-    // Cancel order
-    order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status: 'cancelled' },
-      { new: true }
-    );
-    
-    // Restore crop quantity
-    const crop = await Crop.findById(order.cropId);
-    if (crop) {
-      crop.quantity += order.quantity;
-      await crop.save();
-    }
-    
+
+    await orderDb.runTransaction(async (transaction) => {
+      transaction.update(orderDocRef, {
+        status: 'cancelled',
+        updatedAt: orderAdmin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      const cropRef = orderDb.collection('crops').doc(orderData.cropId);
+      const cropDoc = await transaction.get(cropRef);
+
+      if (cropDoc.exists) {
+        const currentQuantity = cropDoc.data().quantity;
+        transaction.update(cropRef, {
+          quantity: currentQuantity + parseInt(orderData.quantity),
+        });
+      }
+    });
+
+    const updatedOrderDoc = await orderDocRef.get();
+
     res.status(200).json({
       success: true,
-      data: order
+      data: {
+        ...updatedOrderDoc.data(),
+        id: orderId,
+      },
     });
   } catch (error) {
     console.error('Cancel order error:', error);
     res.status(500).json({
       success: false,
       message: 'Could not cancel order',
-      error: error.message
+      error: error.message,
     });
   }
 };

@@ -227,7 +227,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     return isValid;
   }
-  
+  import { translatePage } from './translation.js';
+
+document.getElementById("languageSwitcher").addEventListener("change", (e) => {
+  const lang = e.target.value;
+  translatePage(lang);
+});
   // Add error message to a field
   function addErrorMessage(field, message) {
     const errorDiv = document.createElement('div');

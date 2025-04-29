@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - CropConnect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+        }
+
+        .hero {
+            background: url('https://images.unsplash.com/photo-1506748686214-0e4c9e4c8e6b?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            color: rgb(0, 0, 0);
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .navbar-expand-lg {
+            background-color: #28a745;
+        }
+
+        .contact-form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: -60px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .contact-form .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+        }
+
+        .contact-form .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .contact-form .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .footer {
+            background-color: #28a745;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer hr {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .success-message i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-seedling me-2"></i>CropConnect
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="browse-crops.html">Browse Crops</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light ms-2" href="register.html">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Contact Us</h1>
+            <p class="lead">We're here to help you connect with farmers and fresh produce.</p>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="container">
+        <div class="contact-form">
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <h3>Message Sent Successfully!</h3>
+                <p>Thank you for contacting us. We'll get back to you soon.</p>
+            </div>
+
+            <h2 class="text-center mb-4">Get in Touch</h2>
+            <form id="contactForm">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject</label>
+                    <select class="form-select" id="subject" name="subject" required>
+                        <option value="" disabled selected>Select a topic</option>
+                        <option value="General Inquiry">General Inquiry</option>
+                        <option value="Farmer Registration">Farmer Registration</option>
+                        <option value="Buyer Support">Buyer Support</option>
+                        <option value="Technical Assistance">Technical Assistance</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Your Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-uppercase mb-4">CropConnect</h5>
+                    <p>Fresh crops, direct from farms to families.</p>
+                    <div class="d-flex">
+                        <a href="#" class="me-3 text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3 text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3 text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4">Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><a href="index.html">Home</a></li>
+                        <li class="mb-2"><a href="browse-crops.html">Browse Crops</a></li>
+                        <li class="mb-2"><a href="about.html">About Us</a></li>
+                        <li class="mb-2"><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="text-uppercase mb-4">Farmers</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><a href="login.html">Login</a></li>
+                        <li class="mb-2"><a href="register.html?role=seller">Register</a></li>
+                        <li class="mb-2"><a href="#">How to Sell</a></li>
+                        <li class="mb-2"><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h5 class="text-uppercase mb-4">Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Farm Road, Cropville, CA 98765
+                        </li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i>(123) 456-7890</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@cropconnect.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 CropConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS with your User ID
+        emailjs.init("ljBwvSPu15BjIp-Rt"); // Replace with your own EmailJS User ID
+
+        // Handle form submission
+        document.getElementById("contactForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Add a hidden input field for timestamp dynamically
+            const timeInput = document.createElement("input");
+            timeInput.type = "hidden";
+            timeInput.name = "time";
+            timeInput.value = new Date().toLocaleString();
+            this.appendChild(timeInput);
+
+            // Send the form using EmailJS
+            emailjs.sendForm("service_1q8uyct", "template_yarwb5c", this)
+                .then(() => {
+                    document.getElementById("contactForm").reset();
+                    document.getElementById("contactForm").style.display = "none";
+                    document.getElementById("successMessage").style.display = "block";
+                })
+                .catch((error) => {
+                    alert("Error sending message. Please try again later.");
+                    console.error("EmailJS error:", error);
+                });
+        });
+    </script>
+
+</body>
+
+</html>

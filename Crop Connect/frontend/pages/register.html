@@ -6,24 +6,147 @@
   <title>Register | CropConnect</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="icon" href="../assets/img/favicon.ico">
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --secondary-color: #388E3C;
+      --accent-color: #81C784;
+      --text-color: #333;
+      --bg-color: #f5f5f5;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    
+    .navbar {
+      background-color: var(--primary-color);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .register-container {
+      max-width: 650px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+    
+    .register-form input {
+      margin-bottom: 15px;
+    }
+    
+    .user-icon {
+      width: 80px;
+      height: 80px;
+      background-color: #e3f2fd;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      font-size: 2rem;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+    }
+    
+    .btn-sign-up {
+      background-color: var(--primary-color);
+      border: none;
+      width: 100%;
+      padding: 10px;
+      color: white;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-sign-up:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .role-selector {
+      display: flex;
+      margin-bottom: 20px;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .role-option {
+      flex: 1;
+      text-align: center;
+      padding: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .role-option.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .role-option:not(.active) {
+      background-color: #f8f9fa;
+    }
+    
+    .role-option i {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+    }
+    
+    .navbar-logo i {
+      margin-right: 8px;
+    }
+    
+    .error-message {
+      color: #dc3545;
+      margin-bottom: 15px;
+      display: none;
+    }
+    
+    /* Hide customer form by default */
+    #customer-form {
+      display: none;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
-        <i class="fas fa-seedling me-2"></i>CropConnect
+      <a class="navbar-logo" href="index.html">
+        <i class="fas fa-seedling"></i>CropConnect
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
@@ -49,161 +172,211 @@
     </div>
   </nav>
 
-  <!-- Registration Section -->
-  <section class="py-5">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="card border-0 shadow-lg">
-            <div class="card-body p-5">
-              <div class="text-center mb-4">
-                <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
-                <h2 class="fw-bold" id="registration-title">Create Your Account</h2>
-                <p class="text-muted">Join CropConnect today and start connecting!</p>
-              </div>
-              
-              <!-- Role Selection Tabs -->
-              <ul class="nav nav-pills nav-justified mb-4" id="roleTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="farmer-tab" data-bs-toggle="pill" data-bs-target="#farmer" type="button" role="tab" aria-controls="farmer" aria-selected="true">
-                    <i class="fas fa-tractor me-2"></i>I'm a Farmer
-                  </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="customer-tab" data-bs-toggle="pill" data-bs-target="#customer" type="button" role="tab" aria-controls="customer" aria-selected="false">
-                    <i class="fas fa-shopping-basket me-2"></i>I'm a Customer
-                  </button>
-                </li>
-              </ul>
-              
-              <!-- Registration Form -->
-              <div class="tab-content" id="roleTabContent">
-                <!-- Farmer Registration -->
-                <div class="tab-pane fade show active" id="farmer" role="tabpanel" aria-labelledby="farmer-tab">
-                  <form id="farmer-registration-form">
-                    <input type="hidden" name="role" value="seller">
-                    
-                    <div class="alert alert-danger d-none" id="farmer-error"></div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="farmer-name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="farmer-name" name="name" required>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="farmer-email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="farmer-email" name="email" required>
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="farmer-password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="farmer-password" name="password" required minlength="6">
-                        <small class="text-muted">At least 6 characters</small>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="farmer-confirm-password" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="farmer-confirm-password" required minlength="6">
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="farmer-phone" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="farmer-phone" name="phone" required>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="farmer-location" class="form-label">Farm Location</label>
-                        <input type="text" class="form-control" id="farmer-location" name="location" required>
-                      </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                      <label for="farmer-profile-pic" class="form-label">Profile Picture (Optional)</label>
-                      <input type="file" class="form-control" id="farmer-profile-pic" name="profileImage">
-                    </div>
-                    
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="farmer-agree" required>
-                      <label class="form-check-label" for="farmer-agree">I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></label>
-                    </div>
-                    
-                    <div class="d-grid">
-                      <button type="submit" class="btn btn-primary btn-lg">Sign Up as Farmer</button>
-                    </div>
-                  </form>
-                </div>
-                
-                <!-- Customer Registration -->
-                <div class="tab-pane fade" id="customer" role="tabpanel" aria-labelledby="customer-tab">
-                  <form id="customer-registration-form">
-                    <input type="hidden" name="role" value="customer">
-                    
-                    <div class="alert alert-danger d-none" id="customer-error"></div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="customer-name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="customer-name" name="name" required>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="customer-email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="customer-email" name="email" required>
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="customer-password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="customer-password" name="password" required minlength="6">
-                        <small class="text-muted">At least 6 characters</small>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="customer-confirm-password" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="customer-confirm-password" required minlength="6">
-                      </div>
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label for="customer-phone" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="customer-phone" name="phone" required>
-                      </div>
-                      <div class="col-md-6 mb-3">
-                        <label for="customer-location" class="form-label">Your Location</label>
-                        <input type="text" class="form-control" id="customer-location" name="location" required>
-                      </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                      <label for="customer-profile-pic" class="form-label">Profile Picture (Optional)</label>
-                      <input type="file" class="form-control" id="customer-profile-pic" name="profileImage">
-                    </div>
-                    
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="customer-agree" required>
-                      <label class="form-check-label" for="customer-agree">I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a></label>
-                    </div>
-                    
-                    <div class="d-grid">
-                      <button type="submit" class="btn btn-accent btn-lg">Sign Up as Customer</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              
-              <div class="text-center mt-4">
-                <p class="mb-0">Already have an account? <a href="login.html">Login here</a></p>
-              </div>
+  <!-- Register Container -->
+  <div class="container">
+    <div class="register-container">
+      <div class="user-icon">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      
+      <h2 class="text-center mb-3">Create Your Account</h2>
+      <p class="text-center text-muted mb-4">Join CropConnect today and start connecting!</p>
+      
+      <div class="error-message" id="error-message"></div>
+      
+      <!-- User Type Selection -->
+      <div class="role-selector mb-4">
+        <div class="role-option active" id="farmer-option" data-role="seller">
+          <i class="fas fa-tractor"></i>
+          <span>I'm a Farmer</span>
+        </div>
+        <div class="role-option" id="customer-option" data-role="customer">
+          <i class="fas fa-shopping-basket"></i>
+          <span>I'm a Customer</span>
+        </div>
+      </div>
+      
+      <!-- Farmer Registration Form -->
+      <form id="farmer-form" class="register-form">
+        <input type="hidden" name="role" value="seller" id="farmer-role">
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="farmer-name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="farmer-name" placeholder="Enter your full name" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="farmer-email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="farmer-email" placeholder="Enter your email" required>
             </div>
           </div>
         </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="farmer-password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="farmer-password" placeholder="Create a password" required minlength="6">
+              <small class="text-muted">At least 6 characters</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="farmer-confirm-password" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="farmer-confirm-password" placeholder="Confirm your password" required minlength="6">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="farmer-phone" class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="farmer-phone" placeholder="Enter your phone number" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="farmer-location" class="form-label">Farm Location</label>
+              <input type="text" class="form-control" id="farmer-location" placeholder="Enter your farm location" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="farmer-terms" required>
+          <label class="form-check-label" for="farmer-terms">
+            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a> and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+          </label>
+        </div>
+        
+        <button type="submit" class="btn-sign-up">Sign Up as Farmer</button>
+      </form>
+      
+      <!-- Customer Registration Form -->
+      <form id="customer-form" class="register-form">
+        <input type="hidden" name="role" value="customer" id="customer-role">
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="customer-name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="customer-name" placeholder="Enter your full name" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="customer-email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="customer-email" placeholder="Enter your email" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="customer-password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="customer-password" placeholder="Create a password" required minlength="6">
+              <small class="text-muted">At least 6 characters</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="customer-confirm-password" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="customer-confirm-password" placeholder="Confirm your password" required minlength="6">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="customer-phone" class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="customer-phone" placeholder="Enter your phone number" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="customer-location" class="form-label">Your Location</label>
+              <input type="text" class="form-control" id="customer-location" placeholder="Enter your location" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="customer-terms" required>
+          <label class="form-check-label" for="customer-terms">
+            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a> and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+          </label>
+        </div>
+        
+        <button type="submit" class="btn-sign-up">Sign Up as Customer</button>
+      </form>
+      
+      <div class="text-center mt-4">
+        <p>Already have an account? <a href="login.html">Login here</a></p>
       </div>
     </div>
-  </section>
-
-  <!-- Footer -->
+  </div>
+  
+  <!-- Terms Modal -->
+  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h4>1. Acceptance of Terms</h4>
+          <p>By accessing and using CropConnect, you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our platform.</p>
+          
+          <h4>2. User Registration</h4>
+          <p>To use certain features of our platform, you must register for an account. You agree to provide accurate and complete information during registration and to update such information to keep it accurate.</p>
+          
+          <h4>3. User Conduct</h4>
+          <p>You agree not to use our platform for any illegal or unauthorized purpose. You must not transmit any worms or viruses or any code of a destructive nature.</p>
+          
+          <h4>4. Privacy Policy</h4>
+          <p>Your use of CropConnect is also governed by our Privacy Policy, which is incorporated by reference into these Terms and Conditions.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Privacy Modal -->
+  <div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="privacyModalLabel">Privacy Policy</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h4>1. Information We Collect</h4>
+          <p>We collect information you provide directly to us, such as when you create an account, fill out a form, or communicate with us.</p>
+          
+          <h4>2. How We Use Your Information</h4>
+          <p>We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.</p>
+          
+          <h4>3. Information Sharing</h4>
+          <p>We may share information as described in this policy, such as with vendors who need access to provide services to us.</p>
+          
+          <h4>4. Security</h4>
+          <p>We take reasonable measures to help protect your personal information from loss, theft, misuse, and unauthorized access.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <footer>
     <div class="container">
       <div class="row">
@@ -212,9 +385,9 @@
           <p>Fresh crops, direct from farms to families.</p>
           <div class="d-flex">
             <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://x.com/Cropconnec23918" class="me-3"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/cropconnectfarmer/" class="me-3"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/feed/"><i class="fab fa-linkedin-in"></i></a>
           </div>
         </div>
         <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
@@ -250,84 +423,251 @@
       </div>
     </div>
   </footer>
-
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Custom JS -->
-  <script src="../assets/js/auth.js"></script>
-  <script>
+  
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+      getFirestore,
+      doc, 
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Your Firebase configuration - REPLACE WITH YOUR ACTUAL CONFIG
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "your-project.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project.appspot.com",
+      messagingSenderId: "your-sender-id",
+      appId: "your-app-id"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     document.addEventListener('DOMContentLoaded', function() {
-      // Check URL parameters for pre-selecting role
+      // Check if user is already logged in
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (user) {
+        // Redirect to appropriate dashboard
+        if (user.role === 'seller') {
+          window.location.href = 'seller-dashboard.html';
+        } else {
+          window.location.href = 'customer-dashboard.html';
+        }
+        return;
+      }
+      
+      // Role selection toggle
+      const farmerOption = document.getElementById('farmer-option');
+      const customerOption = document.getElementById('customer-option');
+      const farmerForm = document.getElementById('farmer-form');
+      const customerForm = document.getElementById('customer-form');
+      
+      farmerOption.addEventListener('click', function() {
+        farmerOption.classList.add('active');
+        customerOption.classList.remove('active');
+        farmerForm.style.display = 'block';
+        customerForm.style.display = 'none';
+      });
+      
+      customerOption.addEventListener('click', function() {
+        customerOption.classList.add('active');
+        farmerOption.classList.remove('active');
+        customerForm.style.display = 'block';
+        farmerForm.style.display = 'none';
+      });
+      
+      // Farmer form submission
+      const farmerFormEl = document.getElementById('farmer-form');
+      farmerFormEl.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const name = document.getElementById('farmer-name').value;
+        const email = document.getElementById('farmer-email').value;
+        const password = document.getElementById('farmer-password').value;
+        const confirmPassword = document.getElementById('farmer-confirm-password').value;
+        const phone = document.getElementById('farmer-phone').value;
+        const location = document.getElementById('farmer-location').value;
+        const termsChecked = document.getElementById('farmer-terms').checked;
+        
+        // Validate form
+        const errorElement = document.getElementById('error-message');
+        
+        if (password !== confirmPassword) {
+          errorElement.textContent = "Passwords do not match";
+          errorElement.style.display = "block";
+          return;
+        }
+        
+        if (!termsChecked) {
+          errorElement.textContent = "You must agree to the Terms and Conditions";
+          errorElement.style.display = "block";
+          return;
+        }
+        
+        // Show loading state
+        const submitBtn = farmerFormEl.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.textContent = "Signing up...";
+        submitBtn.disabled = true;
+        
+        // Register with Firebase
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Store additional user data in Firestore
+            return setDoc(doc(db, "users", userCredential.user.uid), {
+              name: name,
+              email: email,
+              role: 'seller',
+              phone: phone,
+              location: location,
+              createdAt: serverTimestamp()
+            });
+          })
+          .then(() => {
+            // Get current user
+            const user = auth.currentUser;
+            
+            // Store user info in localStorage
+            localStorage.setItem('user', JSON.stringify({
+              id: user.uid,
+              name: name,
+              email: email,
+              role: 'seller'
+            }));
+            
+            // Redirect to dashboard
+            window.location.href = 'seller-dashboard.html';
+          })
+          .catch((error) => {
+            console.error("Registration error:", error);
+            
+            // Reset button
+            submitBtn.textContent = originalBtnText;
+            submitBtn.disabled = false;
+            
+            // Show error message
+            let errorMessage = "Failed to create account.";
+            if (error.code === 'auth/email-already-in-use') {
+              errorMessage = "Email is already in use. Please try another email or login instead.";
+            } else if (error.code === 'auth/weak-password') {
+              errorMessage = "Password is too weak. Please use a stronger password.";
+            } else if (error.code === 'auth/invalid-email') {
+              errorMessage = "Invalid email address.";
+            }
+            
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = "block";
+          });
+      });
+      
+      // Customer form submission
+      const customerFormEl = document.getElementById('customer-form');
+      customerFormEl.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const name = document.getElementById('customer-name').value;
+        const email = document.getElementById('customer-email').value;
+        const password = document.getElementById('customer-password').value;
+        const confirmPassword = document.getElementById('customer-confirm-password').value;
+        const phone = document.getElementById('customer-phone').value;
+        const location = document.getElementById('customer-location').value;
+        const termsChecked = document.getElementById('customer-terms').checked;
+        
+        // Validate form
+        const errorElement = document.getElementById('error-message');
+        
+        if (password !== confirmPassword) {
+          errorElement.textContent = "Passwords do not match";
+          errorElement.style.display = "block";
+          return;
+        }
+        
+        if (!termsChecked) {
+          errorElement.textContent = "You must agree to the Terms and Conditions";
+          errorElement.style.display = "block";
+          return;
+        }
+        
+        // Show loading state
+        const submitBtn = customerFormEl.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.textContent = "Signing up...";
+        submitBtn.disabled = true;
+        
+        // Register with Firebase
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Store additional user data in Firestore
+            return setDoc(doc(db, "users", userCredential.user.uid), {
+              name: name,
+              email: email,
+              role: 'customer',
+              phone: phone,
+              location: location,
+              createdAt: serverTimestamp()
+            });
+          })
+          .then(() => {
+            // Get current user
+            const user = auth.currentUser;
+            
+            // Store user info in localStorage
+            localStorage.setItem('user', JSON.stringify({
+              id: user.uid,
+              name: name,
+              email: email,
+              role: 'customer'
+            }));
+            
+            // Redirect to dashboard
+            window.location.href = 'customer-dashboard.html';
+          })
+          .catch((error) => {
+            console.error("Registration error:", error);
+            
+            // Reset button
+            submitBtn.textContent = originalBtnText;
+            submitBtn.disabled = false;
+            
+            // Show error message
+            let errorMessage = "Failed to create account.";
+            if (error.code === 'auth/email-already-in-use') {
+              errorMessage = "Email is already in use. Please try another email or login instead.";
+            } else if (error.code === 'auth/weak-password') {
+              errorMessage = "Password is too weak. Please use a stronger password.";
+            } else if (error.code === 'auth/invalid-email') {
+              errorMessage = "Invalid email address.";
+            }
+            
+            errorElement.textContent = errorMessage;
+            errorElement.style.display = "block";
+          });
+      });
+      
+      // Check URL parameters for role selection
       const urlParams = new URLSearchParams(window.location.search);
       const role = urlParams.get('role');
       
       if (role === 'seller') {
-        document.getElementById('farmer-tab').click();
+        farmerOption.click();
       } else if (role === 'customer') {
-        document.getElementById('customer-tab').click();
+        customerOption.click();
       }
-      
-      // Form validation and submission for farmer
-      const farmerForm = document.getElementById('farmer-registration-form');
-      farmerForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Check if passwords match
-        const password = document.getElementById('farmer-password').value;
-        const confirmPassword = document.getElementById('farmer-confirm-password').value;
-        
-        if (password !== confirmPassword) {
-          const errorDiv = document.getElementById('farmer-error');
-          errorDiv.textContent = 'Passwords do not match';
-          errorDiv.classList.remove('d-none');
-          return;
-        }
-        
-        // Collect form data
-        const formData = new FormData(farmerForm);
-        const userData = {
-          name: formData.get('name'),
-          email: formData.get('email'),
-          password: formData.get('password'),
-          role: formData.get('role'),
-          phone: formData.get('phone'),
-          location: formData.get('location')
-        };
-        
-        // Call register function from auth.js
-        register(userData, 'farmer-error');
-      });
-      
-      // Form validation and submission for customer
-      const customerForm = document.getElementById('customer-registration-form');
-      customerForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Check if passwords match
-        const password = document.getElementById('customer-password').value;
-        const confirmPassword = document.getElementById('customer-confirm-password').value;
-        
-        if (password !== confirmPassword) {
-          const errorDiv = document.getElementById('customer-error');
-          errorDiv.textContent = 'Passwords do not match';
-          errorDiv.classList.remove('d-none');
-          return;
-        }
-        
-        // Collect form data
-        const formData = new FormData(customerForm);
-        const userData = {
-          name: formData.get('name'),
-          email: formData.get('email'),
-          password: formData.get('password'),
-          role: formData.get('role'),
-          phone: formData.get('phone'),
-          location: formData.get('location')
-        };
-        
-        // Call register function from auth.js
-        register(userData, 'customer-error');
-      });
     });
   </script>
 </body>
